@@ -80,6 +80,8 @@ int main()
 		cin>>x;
 		weights.push_back(x);
 	}
+		
+	///////////////////////////////INPUT OVER///////////////////////////////////////////////////////
 	if(weights.size()!=0)
 	{
 		Node* root=new Root(weights[0]);
