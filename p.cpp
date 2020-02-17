@@ -64,7 +64,7 @@ int main()
 // your code goes here
 	int n; cin>>n;
 
-	int graph[n][n];
+	int graph[n][n]; 					//THIS IS DIRECTED TREE
 	for(int i1=0;i1<n;i1++)
 	{
 		for(int j1=0;j1<n;j1++)
@@ -73,7 +73,7 @@ int main()
 
 		  graph[i1][j1]=x;
 	}
-	vector<int> weights;
+	vector<int> weights; 					//WEIGHT OF EACH NODE
 	for(int i11=0;i11<n;i11++)
 	{
 		int x;
