@@ -133,7 +133,7 @@ void L1(Node* root, vector<ObjectL1*> &vec, int &node_number)    //array is pass
     return;
 }
 
-
+/*
 int main() 
 {
 // your code goes here
@@ -173,6 +173,54 @@ int main()
 	}
 	else return -1;
 }
+
+		
+return 0;
+}
+*/
+
+//this main is to test the L1 function
+int main() 
+{
+// your code goes here
+	// Node* null_node = new Node(-1, NULL);
+	Node* root = new Node(0, nullptr);
+    Node* one = new Node(1, root);
+    Node* two = new Node(2, root);
+    Node* three = new Node(3, root);
+    Node* four = new Node(4, root);
+    Node* five = new Node(5, root);
+    (root->node_child).push_back(one) ;
+    (root->node_child).push_back(two) ;
+    (root->node_child).push_back(three) ;
+    (root->node_child).push_back(four);
+    (root->node_child).push_back(five) ;
+    Node* six = new Node(6, one);
+    Node* seven = new Node(7, one);
+    (one->node_child).push_back(six);
+    (one->node_child).push_back(seven);
+
+    vector<ObjectL1*> vec;
+    int node_number = 0;
+    cout<<"start\n";
+    L1(root, vec, node_number);
+    int size = vec.size();
+    if(size==node_number){
+        cout<<"hurrah!\n";
+    }
+    for(int i=0; i<size; i++){
+        ObjectL1* obj = vec[i];
+        int wt = (obj->node)->weight;
+        int wt1 = (obj->mv)->weight;
+        int wt2;
+        if(obj->mv_prime == nullptr)
+        wt2 =-1;
+        else
+        wt2 = (obj->mv_prime)->weight;
+        cout<<"weight of node: "<<wt<<"\n";
+        cout<<"weight of mv: "<<wt1<<"\n";
+        cout<<"weight of mv_prime: "<<wt2<<"\n";
+    }
 
 		
 return 0;
