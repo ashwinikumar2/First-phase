@@ -62,6 +62,8 @@ public:
 int main() 
 {
 // your code goes here
+	
+	//////////////////////////////INPUT STARTS////////////////////////////////////////////////
 	int n; cin>>n;
 
 	int graph[n][n]; 					//THIS IS DIRECTED TREE
