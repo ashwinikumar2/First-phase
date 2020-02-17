@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
+
 using namespace std;
+
 class Node
 {
     public:
@@ -20,9 +22,25 @@ class Node
         child.push_back(node);
     }
 }
+class Edge
+{
+public:
+	int length;
+	Node* firstNode;
+	Node* secondNode;
+	
+	Edge(int length, Node* firstNode ,Node* secondNode)
+	{
+		this.length=length;
+		this.firstNode=firstNode;
+		this.secondNode=secondNode;
+	}
+}
+
 
 class Tree
 {
+public:
 	Node* root;
 	vector<Node*> child;
 	Tree(Node* root)
@@ -50,8 +68,21 @@ int main()
 
 		  graph[i1][j1]=x;
 	}
-		
-	
+	vector<int> weights;
+	for(int i11=0;i11<n;i11++)
+	{
+		int x;
+		cin>>x;
+		weights.push_back(x);
+	}
+	if(weights.size()!=0)
+	{
+		Node* root=new Root(weights[0]);
+
+		Tree* tree=new Tree(root);	
+			
+	}
+	else return -1;
 }
 
 		
