@@ -84,7 +84,7 @@ int main()
 	}
 		
 	///////////////////////////////INPUT OVER///////////////////////////////////////////////////////
-	if(weights.size()!=0)
+	if(n!=0)					//if Number of nodes are >0 (Obviously)
 	{
 		Node* root=new Root(weights[0]);
 
