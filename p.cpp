@@ -1,55 +1,57 @@
-#include <iostream>
-#include <vector>
-#include <map>
+#include <bits/stdc++.h>
+
+
 using namespace std;
+
+
 
 class Node
 {
     public:
   
-    int weight; 			//weight of the node.
-    Node* parent;			//parent of the node(only one parent is possible)
+    int weight; 			        //weight of the node.
+    Node* parent;			        //parent of the node(only one parent is possible)
     
     vector<Node*> node_child;		//vector to store the children of the node.
 	
     Node(int weight, Node* parent)	//constructor
     {
-        this.weight=weight;
-        this.parent=parent;
+        this->weight = weight;
+        this->parent = parent;
     }
   
     void add_child_in_node(Node* node)	//function to add the children of the node to a vector.
     {
         node_child.push_back(node);
     }
-}
+};
 
 class Edge
 {
 public:
-	int length;			//length of the edge.
-	Node* firstNode;		//first node attached to the edge.
-	Node* secondNode;		//second node attached to the edge.
+	int length;			                //length of the edge.
+	Node* firstNode;		            //first node attached to the edge.
+	Node* secondNode;		            //second node attached to the edge.
 	
 	//constructor of the class Edge
 	Edge(int length, Node* firstNode ,Node* secondNode)
 	{
-		this.length=length;
-		this.firstNode=firstNode;
-		this.secondNode=secondNode;
+		this->length = length;
+		this->firstNode = firstNode;
+		this->secondNode = secondNode;
 	}
-}
+};
 
 
 class Tree
 {
 public:
-	Node* root;			//root of the tree
+	Node* root;			    //root of the tree
 	vector<Node*> tree_child;	//vector to store the elements of the tree.
 	
 	Tree(Node* root)		//constructor
 	{	
-		this.root=root;
+		this->root = root;
 	}
 	
 	//function to add nodes in tree
@@ -57,7 +59,80 @@ public:
 	{
 		tree_child.push_back(node);
 	}
+};
+
+class ObjectL1
+{
+public:
+    Node* node;     //reference node. 
+    int node_number;    
+    Node* mv;       // Node mv
+    Node* mv_prime; //Node mv' 
+
+    ObjectL1(Node* node, Node* mv, Node* mv_prime, int node_number)
+    {
+        this->node = node;
+        this->mv = mv;
+        this->mv_prime = mv_prime;
+        this->node_number = node_number;
+    }
+
+};
+
+Node* find_mv(Node* current_node)
+{
+    if((current_node->node_child).size() == 0){
+        return current_node;
+    }
+    
+    return find_mv((current_node->node_child)[0]);
 }
+
+void L1(Node* root, vector<ObjectL1*> &vec, int &node_number)    //array is passed by reference.
+{
+    //base case1: when the only node is root
+
+    // cout<<"into the loop\n";
+    // cout<<"node_number"<<node_number<<endl;
+    if((root->node_child).size() == 0 &&  (root->parent) == nullptr){
+        // cout<<"only root\n";
+        ObjectL1* obj ;
+        if(node_number == 0)
+        obj = new ObjectL1(root, find_mv(root), nullptr, node_number);
+        else
+        obj = new ObjectL1(root, find_mv(root), (vec[node_number-1])->node, node_number);
+
+        node_number += 1;
+        vec.push_back(obj);
+        return;
+    }
+    
+    //base case2: when the node is the leaf node.
+    if((root->node_child).size() == 0){
+        //cout<<"leaf node\n";
+        ObjectL1* obj;
+
+        if(node_number == 0)
+        obj = new ObjectL1(root, find_mv(root), nullptr, node_number);
+        else
+        obj = new ObjectL1(root, find_mv(root), (vec[node_number-1])->node, node_number);
+        
+        node_number += 1;
+        vec.push_back(obj);
+        return;
+    }
+
+    //recursive program.
+    int size = (root->node_child).size();
+    for(int i=0; i< size; i++){
+        L1((root->node_child)[i], vec, node_number);
+    }
+    ObjectL1* obj = new ObjectL1(root, find_mv(root), (vec[node_number-1])->node, node_number);
+    node_number += 1;
+    vec.push_back(obj);
+    return;
+}
+
 
 int main() 
 {
