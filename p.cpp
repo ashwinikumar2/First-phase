@@ -88,7 +88,12 @@ int main()
 	{
 		Node* root=new Root(weights[0]);
 
-		Tree* tree=new Tree(root);	
+		Tree* tree=new Tree(root);
+		//Post-Order Traversal							
+		ObjectL1 postOrderTraversal[n]=L1(graph*);		//Create a class ObjectL1. THIS OBJECT CONTAINS A NODE(REFERENCE), Mv, Mv'
+									//An array made of objects of class ObjectL1 is returned
+		
+		
 			
 	}
 	else return -1;
