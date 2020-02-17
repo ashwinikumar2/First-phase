@@ -7,28 +7,31 @@ class Node
 {
     public:
   
-    int weight; 
-    Node* parent;
+    int weight; 			//weight of the node.
+    Node* parent;			//parent of the node(only one parent is possible)
     
-    vector<Node*> chlid;
-    Node(int weight, Node* parent)
+    vector<Node*> node_child;		//vector to store the children of the node.
+	
+    Node(int weight, Node* parent)	//constructor
     {
         this.weight=weight;
         this.parent=parent;
     }
   
-    void add(Node* node)
+    void add_child_in_node(Node* node)	//function to add the children of the node to a vector.
     {
-        child.push_back(node);
+        node_child.push_back(node);
     }
 }
+
 class Edge
 {
 public:
-	int length;
-	Node* firstNode;
-	Node* secondNode;
+	int length;			//length of the edge.
+	Node* firstNode;		//first node attached to the edge.
+	Node* secondNode;		//second node attached to the edge.
 	
+	//constructor of the class Edge
 	Edge(int length, Node* firstNode ,Node* secondNode)
 	{
 		this.length=length;
@@ -41,16 +44,18 @@ public:
 class Tree
 {
 public:
-	Node* root;
-	vector<Node*> child;
-	Tree(Node* root)
+	Node* root;			//root of the tree
+	vector<Node*> tree_child;	//vector to store the elements of the tree.
+	
+	Tree(Node* root)		//constructor
 	{	
 		this.root=root;
 	}
 	
-	void add(Node* node)
+	//function to add nodes in tree
+	void add_in_tree(Node* node)
 	{
-		child.push_back(node);
+		tree_child.push_back(node);
 	}
 }
 
