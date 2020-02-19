@@ -233,6 +233,8 @@ int main()
         cout<<"weight of node: "<<wt<<"\n";
         cout<<"weight of mv: "<<wt1<<"\n";
         cout<<"weight of mv_prime: "<<wt2<<"\n";
+	cout<<"node number: "<<node_number<<endl;
+        cout<<"post_order_number: "<<(obj->node)->post_order_number<<endl<<endl;
     }
     cout<<"size of vec is "<<vec.size()<<endl;
     for(int i=0;i<vec.size();i++)
