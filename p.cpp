@@ -2,7 +2,7 @@
 
 
 using namespace std;
-
+//name space std;
 
 
 class Node
@@ -13,7 +13,6 @@ class Node
     Node* parent;			        //parent of the node(only one parent is possible)
     int post_order_number;
     vector<Node*> node_child;		//vector to store the children of the node.
-	
     Node(int weight, Node* parent)	//constructor
     {
         this->weight = weight;
@@ -134,16 +133,73 @@ void L1(Node* root, vector<ObjectL1*> &vec, int &node_number)    //array is pass
     return;
 }
 
-int Tv1(Node* root, Node* Mv, vector<vector<Node*>> graph)
-{
-	for (int i = 0; i < graph.size(); ++i)
-	{
-		/* code */
-		
-		
-	}
+int distance(Node* x, Node* u, vector<Edge*> edge_vector){
 
-	return 0;
+    Node* child = x;
+    Node* parent = child->parent;
+    int dist = 0;
+    int  =0;
+    while(parent!=u ){
+        y = search_edge(child, parent, edge_vector);
+        dist += x;
+        child = parent;
+        parent = child->parent;
+    }
+
+    y = search_edge(child, parent, edge_vector);
+    dist += y;
+    return dist;
+    
+
+}
+
+int search_edge(Node* x, Node* u, vector<Edge*> edge_vector){//search whether an edge is present or not.
+
+    int size = edge_vector.size();
+    Edge* obj;
+    if(size ==0)
+    return -1;
+    for(int i=0; i<size; i++){
+        obj = edge_vector[i];
+        Node* a = obj->firstNode;
+        Node* b = obj->secondNode;
+        if(a==x && b==u)
+        return obj->length;
+    }
+    return -1;
+}
+
+void T_uv_Zero(Node* v, Node* u, int &value)
+{
+    //base case
+    int size = (v->node_child).size();
+    if(size==0){
+        value += distance(v, u, edge_vector) * (v->weight);
+        return ;
+    }
+
+    for(int i=0; i<size; i++){
+        T_uv_Zero(node_child[i], u, value);
+    }
+    value += distance(v, u, edge_vector) * (v->weight);
+    return;
+}
+
+int Tv1(Node* root, Node* Mv, vector<Node*> nodesFinal, vector<Edge*> edges) 
+{
+	int mv=Mv->postOrderNumber;
+    int v=root->postOrderNumber;
+    int d=0;
+    for(int i=mv;i<v;i++)
+    {
+        
+        Node* parent=Mv->parent;
+        while(parent!=Root)
+        {
+            d+=distance(nodesFinal[i-1], root, edges);      //add distance of child to parent
+        }
+    }
+	return d;
 }
 
 /*
@@ -194,22 +250,65 @@ int main()
 // your code goes here
 	// Node* null_node = new Node(-1, NULL);
 	//////////////////INPUT START///////////////////////
+	int n=7;   
+	vector<Node*> nodes;
 	Node* root = new Node(0, nullptr);
+	nodes.push_back(root);
     Node* one = new Node(1, root);
+    nodes.push_back(one);
     Node* two = new Node(2, root);
+    nodes.push_back(two);
     Node* three = new Node(3, root);
+    nodes.push_back(three);
     Node* four = new Node(4, root);
+    nodes.push_back(four);
     Node* five = new Node(5, root);
+    nodes.push_back(five);
     (root->node_child).push_back(one) ;
     (root->node_child).push_back(two) ;
     (root->node_child).push_back(three) ;
     (root->node_child).push_back(four);
     (root->node_child).push_back(five) ;
     Node* six = new Node(6, one);
+    nodes.push_back(six);
     Node* seven = new Node(7, one);
+    nodes.push_back(seven);
     (one->node_child).push_back(six);
     (one->node_child).push_back(seven);
-    vector<vector<Node*>> graph;
+    
+
+	
+    int graph[n][n];				//Adjaceny matrix of the tree
+    
+    // cin>>n;
+    graph[1][0]=10;
+    graph[2][0]=20;
+    graph[3][0]=30;
+    graph[4][0]=40;
+    graph[5][0]=50;
+    graph[6][1]=60;
+    graph[7][1]=70;
+
+    vector<vector<int>> graph1;
+    vector<Edge*> edges;
+    for (int i = 0; i < n; i++)
+    {
+    	/* code */
+        vector<int> v;
+    	for (int i1 = 0; i1 < count; i1++)
+    	{
+    		/* code */
+    		v.push_back(graph[i][i1]);
+    		if(graph[i][i1]!=0)
+    		{
+    			Edge* e=new Edge(graph[i][i1], nodes[i], nodes[i1]);
+    			edges.push_back(e);
+    		}
+
+    	}
+        v.push_back(v);
+    }
+    
     ////////////////////////INPUT OVER//////////////////////
 
     //////////////////L1///////////////////////
@@ -247,13 +346,16 @@ int main()
     }
     //////////////////////L1////////////////////////////////
     /////////////////L2/////////////////////////////////////
+    int vec1[vec.size()];
     for (int i = 0; i < vec.size(); i++)
     {
     	//////////////////l2//////////////////////////
     	//////////////////L3//////////////////////////
-    	int Tv11=Tv1(vec[i]->node, vec[i]->mv,graph);		//take inputs the length of each edge and prepare a adjacency matrix for that
-    									//also prepare a vector of weights of vertices
 
+        int mvv=vec[i]->mv;
+    	int Tv11=Tv1(vec[i]->node, vec[vec[i]->mv],vec, edges);		//take inputs the length of each edge and prepare a adjacency matrix for that
+    									//also prepare a vector of weights of vertices
+        
     }
 
 
