@@ -1,5 +1,9 @@
 #include <bits/stdc++.h>
+
+
 using namespace std;
+
+
 
 class Node
 {
@@ -7,14 +11,13 @@ class Node
   
     int weight; 			        //weight of the node.
     Node* parent;			        //parent of the node(only one parent is possible)
-    int postOrderNumber;
+    int post_order_number;
     vector<Node*> node_child;		//vector to store the children of the node.
 	
     Node(int weight, Node* parent)	//constructor
     {
         this->weight = weight;
         this->parent = parent;
-        postOrderNumber=-1;
     }
   
     void add_child_in_node(Node* node)	//function to add the children of the node to a vector.
@@ -72,7 +75,7 @@ public:
         this->mv = mv;
         this->mv_prime = mv_prime;
         this->node_number = node_number;
-        node->postOrderNumber=node_number;
+        node->post_order_number = node_number;
     }
 
 };
@@ -96,24 +99,24 @@ void L1(Node* root, vector<ObjectL1*> &vec, int &node_number)    //array is pass
         // cout<<"only root\n";
         ObjectL1* obj ;
         if(node_number == 0)
-        obj = new ObjectL1(root, find_mv(root), nullptr, node_number);
+        obj = new ObjectL1(root, find_mv(root), nullptr, node_number+1);
         else
-        obj = new ObjectL1(root, find_mv(root), (vec[node_number-1])->node, node_number);
+        obj = new ObjectL1(root, find_mv(root), (vec[node_number-1])->node, node_number+1);
 
         node_number += 1;
         vec.push_back(obj);
         return;
     }
-    
+
     //base case2: when the node is the leaf node.
     if((root->node_child).size() == 0){
         //cout<<"leaf node\n";
         ObjectL1* obj;
 
         if(node_number == 0)
-        obj = new ObjectL1(root, find_mv(root), nullptr, node_number);
+        obj = new ObjectL1(root, find_mv(root), nullptr, node_number+1);
         else
-        obj = new ObjectL1(root, find_mv(root), (vec[node_number-1])->node, node_number);
+        obj = new ObjectL1(root, find_mv(root), (vec[node_number-1])->node, node_number+1);
         
         node_number += 1;
         vec.push_back(obj);
@@ -125,7 +128,7 @@ void L1(Node* root, vector<ObjectL1*> &vec, int &node_number)    //array is pass
     for(int i=0; i< size; i++){
         L1((root->node_child)[i], vec, node_number);
     }
-    ObjectL1* obj = new ObjectL1(root, find_mv(root), (vec[node_number-1])->node, node_number);
+    ObjectL1* obj = new ObjectL1(root, find_mv(root), (vec[node_number-1])->node, node_number+1);
     node_number += 1;
     vec.push_back(obj);
     return;
