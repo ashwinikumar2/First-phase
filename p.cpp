@@ -1,9 +1,5 @@
 #include <bits/stdc++.h>
-
-
 using namespace std;
-
-
 
 class Node
 {
@@ -11,13 +7,14 @@ class Node
   
     int weight; 			        //weight of the node.
     Node* parent;			        //parent of the node(only one parent is possible)
-    
+    int postOrderNumber;
     vector<Node*> node_child;		//vector to store the children of the node.
 	
     Node(int weight, Node* parent)	//constructor
     {
         this->weight = weight;
         this->parent = parent;
+        postOrderNumber=-1;
     }
   
     void add_child_in_node(Node* node)	//function to add the children of the node to a vector.
@@ -75,6 +72,7 @@ public:
         this->mv = mv;
         this->mv_prime = mv_prime;
         this->node_number = node_number;
+        node->postOrderNumber=node_number;
     }
 
 };
@@ -133,6 +131,18 @@ void L1(Node* root, vector<ObjectL1*> &vec, int &node_number)    //array is pass
     return;
 }
 
+int Tv1(Node* root, Node* Mv, vector<vector<Node*>> graph)
+{
+	for (int i = 0; i < graph.size(); ++i)
+	{
+		/* code */
+		
+		
+	}
+
+	return 0;
+}
+
 /*
 int main() 
 {
@@ -140,14 +150,12 @@ int main()
 	
 	//////////////////////////////INPUT STARTS////////////////////////////////////////////////
 	int n; cin>>n;
-
 	int graph[n][n]; 					//THIS IS DIRECTED TREE
 	for(int i1=0;i1<n;i1++)
 	{
 		for(int j1=0;j1<n;j1++)
 		{
 		  int x; cin>>x;
-
 		  graph[i1][j1]=x;
 	}
 	vector<int> weights; 					//WEIGHT OF EACH NODE
@@ -162,7 +170,6 @@ int main()
 	if(n!=0)					//if Number of nodes are >0 (Obviously)
 	{
 		Node* root=new Root(weights[0]);
-
 		Tree* tree=new Tree(root);
 		//Post-Order Traversal							
 		ObjectL1 postOrderTraversal[n]=L1(graph*);		//Create a class ObjectL1. THIS OBJECT CONTAINS A NODE(REFERENCE), Mv, Mv'
@@ -173,7 +180,6 @@ int main()
 	}
 	else return -1;
 }
-
 		
 return 0;
 }
@@ -184,6 +190,7 @@ int main()
 {
 // your code goes here
 	// Node* null_node = new Node(-1, NULL);
+	//////////////////INPUT START///////////////////////
 	Node* root = new Node(0, nullptr);
     Node* one = new Node(1, root);
     Node* two = new Node(2, root);
@@ -199,8 +206,11 @@ int main()
     Node* seven = new Node(7, one);
     (one->node_child).push_back(six);
     (one->node_child).push_back(seven);
+    vector<vector<Node*>> graph;
+    ////////////////////////INPUT OVER//////////////////////
 
-    vector<ObjectL1*> vec;
+    //////////////////L1///////////////////////
+    vector<ObjectL1*> vec;				//vector conataining nodes in post order
     int node_number = 0;
     cout<<"start\n";
     L1(root, vec, node_number);
@@ -221,6 +231,28 @@ int main()
         cout<<"weight of mv: "<<wt1<<"\n";
         cout<<"weight of mv_prime: "<<wt2<<"\n";
     }
+    cout<<"size of vec is "<<vec.size()<<endl;
+    for(int i=0;i<vec.size();i++)
+    {
+    	
+    	cout<<"node "<<vec[i]->node->weight<<"number is"<<vec[i]->node_number;
+    	if(vec[i]->node->parent!=nullptr)
+    	cout<<" with its parent as "<<vec[i]->node->parent->weight;
+    	cout<<endl;
+    }
+    //////////////////////L1////////////////////////////////
+    /////////////////L2/////////////////////////////////////
+    for (int i = 0; i < vec.size(); i++)
+    {
+    	//////////////////l2//////////////////////////
+    	//////////////////L3//////////////////////////
+    	int Tv11=Tv1(vec[i]->node, vec[i]->mv,graph);		//take inputs the length of each edge and prepare a adjacency matrix for that
+    									//also prepare a vector of weights of vertices
+
+    }
+
+
+
 
 		
 return 0;
