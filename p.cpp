@@ -72,7 +72,7 @@ public:
     {
         this->node = node;
         this->mv = mv;
-        this->mv_prime = mv_prime;
+        this->mv_prime = mv_pvector<Node*> nodesFinal, vector<Edge*> edgesrime;
         this->node_number = node_number;
         node->post_order_number = node_number;
     }
@@ -185,7 +185,7 @@ void T_uv_Zero(Node* v, Node* u, int &value)
     return;
 }
 
-int Tv1(Node* root, Node* Mv, vector<Node*> nodesFinal, vector<Edge*> edges) 
+int Tv1(Node* root, Node* Mv, vector<ObjectL1*> nodesFinal, vector<Edge*> edges) 
 {
 	int mv=Mv->postOrderNumber;
     int v=root->postOrderNumber;
@@ -196,12 +196,35 @@ int Tv1(Node* root, Node* Mv, vector<Node*> nodesFinal, vector<Edge*> edges)
         Node* parent=Mv->parent;
         while(parent!=Root)
         {
-            d+=distance(nodesFinal[i-1], root, edges);      //add distance of child to parent
+            d+=distance(nodesFinal[i-1]->node, root, edges);      //add distance of child to parent
         }
     }
 	return d;
 }
 
+int Ruv1(int v, int u, vector<ObjectL1*> nodesFinal, vector<Edge*> edges)
+{
+    ans=0;
+    for(int i=v;i<u;i++)
+    {
+        int w=nodesFinal[i]->node->weight;
+        ans+=w*distance(nodesFinal[i]->node, nodesFinal[u-1]->node, edges);
+    }
+    return ans;
+}
+
+int Luv0(int v, int u, vector<ObjectL1*> nodesFinal, vector<Edge*> edges)
+{
+    ans=0;
+    int mv=nodesFinal[v-1]->mv;
+    int mu=nodesFinal[u-1]->mv;
+    for(int i=mu;i<mv-1;i++)
+    {
+        int w=nodesFinal[i]->node->weight;
+        ans+=w*distance(nodesFinal[i]->node, nodesFinal[u-1]->node, edges);
+    }
+    return ans;
+}
 /*
 int main() 
 {
@@ -290,7 +313,7 @@ int main()
     graph[7][1]=70;
 
     vector<vector<int>> graph1;
-    vector<Edge*> edges;
+    vector<Edge*> edges;                //VECTOR CONTAINING EDGES
     for (int i = 0; i < n; i++)
     {
     	/* code */
@@ -351,14 +374,44 @@ int main()
     {
     	//////////////////l2//////////////////////////
     	//////////////////L3//////////////////////////
-
+        
         int mvv=vec[i]->mv;
     	int Tv11=Tv1(vec[i]->node, vec[vec[i]->mv],vec, edges);		//take inputs the length of each edge and prepare a adjacency matrix for that
     									//also prepare a vector of weights of vertices
+        int valTuv0=0;
+        T_uv_Zero(vec[i]->node, vec[vec.size()-1],valTuv0 );    //value of valTuv0 is updated
         
+        int ruv1=Ruv1(i, u, vec, edges);
+        int luv0=Luv0(i, u,vec, edges);
+        ////////////////////L3/////////////////////////
+        ////////////////////L4/////////////////////////
+        for(int t=2;t<=k;t++)
+        {
+            ///////////////////////////////L4//////////////////////
+///////////////////////////////////////L5/////////////////////////////////////////            
+            for (int j=mvv+1; j <=i-1 ; j++)
+            {
+                /* code */
+                int mv=vec[j-1]->mv;
+                if(j==mv)
+                {
+                    
+                }
+
+            }
+            
+
+
+
+        }
+
+
+
+
+
     }
 
-
+    
 
 
 		
