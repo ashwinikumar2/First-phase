@@ -72,7 +72,7 @@ public:
     {
         this->node = node;
         this->mv = mv;
-        this->mv_prime = mv_pvector<Node*> nodesFinal, vector<Edge*> edgesrime;
+        this->mv_prime = mv_prime;
         this->node_number = node_number;
         node->post_order_number = node_number;
     }
