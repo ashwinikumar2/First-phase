@@ -87,7 +87,21 @@ Node* find_mv(Node* current_node)
     
     return find_mv((current_node->node_child)[0]);
 }
+int search_edge(Node* x, Node* u, vector<Edge*> edge_vector){//search whether an edge is present or not.
 
+    int size = edge_vector.size();
+    Edge* obj;
+    if(size ==0)
+    return -1;
+    for(int i=0; i<size; i++){
+        obj = edge_vector[i];
+        Node* a = obj->firstNode;
+        Node* b = obj->secondNode;
+        if(a==x && b==u)
+        return obj->length;
+    }
+    return -1;
+}
 void L1(Node* root, vector<ObjectL1*> &vec, int &node_number)    //array is passed by reference.
 {
     //base case1: when the only node is root
@@ -138,7 +152,7 @@ int distance(Node* x, Node* u, vector<Edge*> edge_vector){
     Node* child = x;
     Node* parent = child->parent;
     int dist = 0;
-    int  =0;
+    int  y=0;
     while(parent!=u ){
         y = search_edge(child, parent, edge_vector);
         dist += x;
@@ -153,23 +167,9 @@ int distance(Node* x, Node* u, vector<Edge*> edge_vector){
 
 }
 
-int search_edge(Node* x, Node* u, vector<Edge*> edge_vector){//search whether an edge is present or not.
 
-    int size = edge_vector.size();
-    Edge* obj;
-    if(size ==0)
-    return -1;
-    for(int i=0; i<size; i++){
-        obj = edge_vector[i];
-        Node* a = obj->firstNode;
-        Node* b = obj->secondNode;
-        if(a==x && b==u)
-        return obj->length;
-    }
-    return -1;
-}
 
-void T_uv_Zero(Node* v, Node* u, int &value)
+void T_uv_Zero(Node* v, Node* u, int &value, vector<Edge*> edge_vector)
 {
     //base case
     int size = (v->node_child).size();
@@ -187,8 +187,8 @@ void T_uv_Zero(Node* v, Node* u, int &value)
 
 int Tv1(Node* root, Node* Mv, vector<ObjectL1*> nodesFinal, vector<Edge*> edges) 
 {
-	int mv=Mv->postOrderNumber;
-    int v=root->postOrderNumber;
+	int mv=Mv->post_order_number;
+    int v=root->post_order_number;
     int d=0;
     for(int i=mv;i<v;i++)
     {
@@ -289,172 +289,171 @@ void printGraph(vector<int> adj[], int V)
 } 
 int main() 
 {
-// your code goes here
-	// Node* null_node = new Node(-1, NULL);
-	//////////////////INPUT START///////////////////////
-    int n=1000;
-    vector<int> adj[n]; 
-for(int i=0;i<n;i++)
-{
-    addEdge()
-}
-	// int n=7;   
-	vector<Node*> nodes;
-	Node* root = new Node(0, nullptr);
-	nodes.push_back(root);
-    Node* one = new Node(1, root);
-    nodes.push_back(one);
-    Node* two = new Node(2, root);
-    nodes.push_back(two);
-    Node* three = new Node(3, root);
-    nodes.push_back(three);
-    Node* four = new Node(4, root);
-    nodes.push_back(four);
-    Node* five = new Node(5, root);
-    nodes.push_back(five);
-    (root->node_child).push_back(one) ;
-    (root->node_child).push_back(two) ;
-    (root->node_child).push_back(three) ;
-    (root->node_child).push_back(four);
-    (root->node_child).push_back(five) ;
-    Node* six = new Node(6, one);
-    nodes.push_back(six);
-    Node* seven = new Node(7, one);
-    nodes.push_back(seven);
-    (one->node_child).push_back(six);
-    (one->node_child).push_back(seven);
-    
+    // your code goes here
+        // Node* null_node = new Node(-1, NULL);
+        //////////////////INPUT START///////////////////////
+        int n=1000;
+        vector<int> adj[n]; 
 
-	
-    int graph[n][n];				//Adjaceny matrix of the tree
-    
-    // cin>>n;
-    graph[1][0]=10;
-    graph[2][0]=20;
-    graph[3][0]=30;
-    graph[4][0]=40;
-    graph[5][0]=50;
-    graph[6][1]=60;
-    graph[7][1]=70;
-
-    vector<vector<int>> graph1;
-    vector<Edge*> edges;                //VECTOR CONTAINING EDGES
-    for (int i = 0; i < n; i++)
+        
+    for(int i=0;i<n;i++)
     {
-    	/* code */
-        vector<int> v;
-    	for (int i1 = 0; i1 < count; i1++)
-    	{
-    		/* code */
-    		v.push_back(graph[i][i1]);
-    		if(graph[i][i1]!=0)
-    		{
-    			Edge* e=new Edge(graph[i][i1], nodes[i], nodes[i1]);
-    			edges.push_back(e);
-    		}
+        // addEdge()
+    }
+        // int n=7;   
+        vector<Node*> nodes;
+        Node* root = new Node(0, nullptr);
+        nodes.push_back(root);
+        Node* one = new Node(1, root);
+        nodes.push_back(one);
+        Node* two = new Node(2, root);
+        nodes.push_back(two);
+        Node* three = new Node(3, root);
+        nodes.push_back(three);
+        Node* four = new Node(4, root);
+        nodes.push_back(four);
+        Node* five = new Node(5, root);
+        nodes.push_back(five);
+        (root->node_child).push_back(one) ;
+        (root->node_child).push_back(two) ;
+        (root->node_child).push_back(three) ;
+        (root->node_child).push_back(four);
+        (root->node_child).push_back(five) ;
+        Node* six = new Node(6, one);
+        nodes.push_back(six);
+        Node* seven = new Node(7, one);
+        nodes.push_back(seven);
+        (one->node_child).push_back(six);
+        (one->node_child).push_back(seven);
+        
 
-    	}
-        v.push_back(v);
-    }
-/////////////////////////////////INPUT OVER//////////////////////////////////////////////
+        
+        int graph[n][n];				//Adjaceny matrix of the tree
+        
+        // cin>>n;
+        graph[1][0]=10;
+        graph[2][0]=20;
+        graph[3][0]=30;
+        graph[4][0]=40;
+        graph[5][0]=50;
+        graph[6][1]=60;
+        graph[7][1]=70;
 
-/////////////////////////////////////L1//////////////////////////////////////////
-    vector<ObjectL1*> vec;				//vector conataining nodes in post order
-    int node_number = 0;
-    cout<<"start\n";
-    L1(root, vec, node_number);
-    int size = vec.size();
-    if(size==node_number){
-        cout<<"hurrah!\n";
-    }
-    for(int i=0; i<size; i++){
-        ObjectL1* obj = vec[i];
-        int wt = (obj->node)->weight;
-        int wt1 = (obj->mv)->weight;
-        int wt2;
-        if(obj->mv_prime == nullptr)
-        wt2 =-1;
-        else
-        wt2 = (obj->mv_prime)->weight;
-        cout<<"weight of node: "<<wt<<"\n";
-        cout<<"weight of mv: "<<wt1<<"\n";
-        cout<<"weight of mv_prime: "<<wt2<<"\n";
-	cout<<"node number: "<<node_number<<endl;
-        cout<<"post_order_number: "<<(obj->node)->post_order_number<<endl<<endl;
-    }
-    cout<<"size of vec is "<<vec.size()<<endl;
-    for(int i=0;i<vec.size();i++)
-    {
-    	
-    	cout<<"node "<<vec[i]->node->weight<<"number is"<<vec[i]->node_number;
-    	if(vec[i]->node->parent!=nullptr)
-    	cout<<" with its parent as "<<vec[i]->node->parent->weight;
-    	cout<<endl;
-    }
-///////////////////////////////////////////L1////////////////////////////////
-///////////////////////////////////////////L2/////////////////////////////////////
-    int vec1[vec.size()];
-    for (int u = 0; u < vec.size();u++)
-    {
-//////////////////////////////////////////////L2//////////////////////////
-//////////////////////////////////////////////L3//////////////////////////
-        int mvOfU=vec[u]->mv;
-        for(int v=mv-1;v<u;v++)                 //v belongs to Tu
+        vector<vector<int>> graph1;
+        vector<Edge*> edges;                //VECTOR CONTAINING EDGES
+        for (int i = 0; i < n; i++)
         {
-            int mvv=vec[v]->mv;
-            
-//CHECK: if mv of some node is at mv-1 then only do the below
-            int Tv11=Tv1(vec[v]->node, vec[vec[v]->mv-1],vec, edges);		//take inputs the length of each edge and prepare a adjacency matrix for that
-                                            //also prepare a vector of weights of vertices
-            int valTuv0=0;
-            T_uv_Zero(vec[v]->node, vec[u],valTuv0 );    //value of valTuv0 is updated
-            
-            int ruv1=Ruv1(v, u, vec, edges);
-            int luv0=Luv0(v, u,vec, edges);
-        }
-///////////////////////////////////////////////L3/////////////////////////
-///////////////////////////////////////////////L4/////////////////////////
-        for(int t=2;t<=k;t++)
-        {
-            int mvv=vec[u]->mv;
-            ///////////////////////////////////L4//////////////////////
-///////////////////////////////////////////////L5/////////////////////////////////////////            
-            for (int v=mvv+1; v <=u-1 ; v++)
+            /* code */
+            vector<int> v;
+            for (int i1 = 0; i1 < count; i1++)
             {
-///////////////////////////////////////////////L5//////////////////////////////////////////
-///////////////////////////////////////////////L6//////////////////////////////////////////
                 /* code */
-                int mv=vec[v-1]->mv;
-                if(v==mv)
+                v.push_back(graph[i][i1]);
+                if(graph[i][i1]!=0)
                 {
-                    int luvt1=Luvt1;
+                    Edge* e=new Edge(graph[i][i1], nodes[i], nodes[i1]);
+                    edges.push_back(e);
                 }
 
             }
-///////////////////////////////////////////////L6///////////////////////////////////////////////            
-///////////////////////////////////////////////L7/////////////////////////////////////////////
-            int tut=Tut;
-///////////////////////////////////////////////L7///////////////////////////////
+            v.push_back(v);
         }
+    /////////////////////////////////INPUT OVER//////////////////////////////////////////////
 
-///////////////////////////////////////////////L8//////////////////////////
-//CHECK: how to calculate Tvt for v=[1, u] & t=[1,k]            
-        vec<int> valuesOfTvt;
-        for (int v = 1; v <=u; v++)
+    /////////////////////////////////////L1//////////////////////////////////////////
+        vector<ObjectL1*> vec;				//vector conataining nodes in post order
+        int node_number = 0;
+        cout<<"start\n";
+        L1(root, vec, node_number);
+        int size = vec.size();
+        if(size==node_number){
+            cout<<"hurrah!\n";
+        }
+        for(int i=0; i<size; i++){
+            ObjectL1* obj = vec[i];
+            int wt = (obj->node)->weight;
+            int wt1 = (obj->mv)->weight;
+            int wt2;
+            if(obj->mv_prime == nullptr)
+            wt2 =-1;
+            else
+            wt2 = (obj->mv_prime)->weight;
+            cout<<"weight of node: "<<wt<<"\n";
+            cout<<"weight of mv: "<<wt1<<"\n";
+            cout<<"weight of mv_prime: "<<wt2<<"\n";
+        cout<<"node number: "<<node_number<<endl;
+            cout<<"post_order_number: "<<(obj->node)->post_order_number<<endl<<endl;
+        }
+        cout<<"size of vec is "<<vec.size()<<endl;
+        for(int i=0;i<vec.size();i++)
         {
-            /* code */
-            for (int t = 1; t <=k; t++)
+            
+            cout<<"node "<<vec[i]->node->weight<<"number is"<<vec[i]->node_number;
+            if(vec[i]->node->parent!=nullptr)
+            cout<<" with its parent as "<<vec[i]->node->parent->weight;
+            cout<<endl;
+        }
+    ///////////////////////////////////////////L1////////////////////////////////
+    ///////////////////////////////////////////L2/////////////////////////////////////
+        int vec1[vec.size()];
+        for (int u = 0; u < vec.size();u++)
+        {
+    //////////////////////////////////////////////L2//////////////////////////
+    //////////////////////////////////////////////L3//////////////////////////
+            int mvOfU=vec[u]->mv;
+            for(int v=mv-1;v<u;v++)                 //v belongs to Tu
+            {
+                int mvv=vec[v]->mv;
+                
+    //CHECK: if mv of some node is at mv-1 then only do the below
+                int Tv11=Tv1(vec[v]->node, vec[vec[v]->mv-1],vec, edges);		//take inputs the length of each edge and prepare a adjacency matrix for that
+                                                //also prepare a vector of weights of vertices
+                int valTuv0=0;
+                T_uv_Zero(vec[v]->node, vec[u],valTuv0, edges );    //value of valTuv0 is updated
+                
+                int ruv1=Ruv1(v, u, vec, edges);
+                int luv0=Luv0(v, u,vec, edges);
+            }
+    ///////////////////////////////////////////////L3/////////////////////////
+    ///////////////////////////////////////////////L4/////////////////////////
+            for(int t=2;t<=k;t++)
+            {
+                int mvv=vec[u]->mv;
+                ///////////////////////////////////L4//////////////////////
+    ///////////////////////////////////////////////L5/////////////////////////////////////////            
+                for (int v=mvv+1; v <=u-1 ; v++)
+                {
+    ///////////////////////////////////////////////L5//////////////////////////////////////////
+    ///////////////////////////////////////////////L6//////////////////////////////////////////
+                    /* code */
+                    int mv=vec[v-1]->mv;
+                    if(v==mv)
+                    {
+                        int luvt1=Luvt1;
+                    }
+
+                }
+    ///////////////////////////////////////////////L6///////////////////////////////////////////////            
+    ///////////////////////////////////////////////L7/////////////////////////////////////////////
+                int tut=Tut;
+    ///////////////////////////////////////////////L7///////////////////////////////
+            }
+
+    ///////////////////////////////////////////////L8//////////////////////////
+    //CHECK: how to calculate Tvt for v=[1, u] & t=[1,k]            
+            vec<int> valuesOfTvt;
+            for (int v = 1; v <=u; v++)
             {
                 /* code */
-                int tvt=Tut;
-                valuesofTvt.push_back(tvt);
-            }   
-        }        
-    }
-////////////////////////////////////////////////L8/////////////////////////////
-    
+                for (int t = 1; t <=k; t++)
+                {
+                    /* code */
+                    int tvt=Tut;
+                    valuesofTvt.push_back(tvt);
+                }   
+            }        
+        }
 
-
-		
+    ////////////////////////////////////////////////L8/////////////////////////////
 return 0;
 }
