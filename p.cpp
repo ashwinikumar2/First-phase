@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
-#include <fstream>
-#include <string>
+// #include <fstream>
+// #include <string>
 
 using namespace std;
 //name space std;
@@ -154,6 +154,9 @@ int distance(Node* x, Node* u, vector<Edge*> edge_vector){
     Node* parent = child->parent;
     int dist = 0;
     int  y=0;
+    if(x==u){
+        return 0;
+    }
     while(parent!=u ){
         y = search_edge(child, parent, edge_vector);
         dist += y;
@@ -170,62 +173,64 @@ int distance(Node* x, Node* u, vector<Edge*> edge_vector){
 
 
 
-void T_uv_Zero(Node* v, Node* u, int &value, vector<Edge*> edge_vector)
+int T_uv_Zero(Node* u, Node* v, vector<ObjectL1*> nodesFinal, vector<Edge*> edge_vector)
 {
-    //base case
-    int size = (v->node_child).size();
-    if(size==0){
-        value += distance(v, u, edge_vector) * (v->weight);
-        return ;
-    }
+    Node* Mv = find_mv(v);
+    int i = Mv->post_order_number;
+    int j = v->post_order_number;
+    int ans = 0;
 
-    for(int i=0; i<size; i++){
-        T_uv_Zero((v->node_child)[i], u, value, edge_vector);
+    for(int k=i; k<=j; k++){
+        int wt = nodesFinal[k-1]->node->weight;
+        ans += wt * distance(nodesFinal[k-1]->node, u, edge_vector);
     }
-    value += distance(v, u, edge_vector) * (v->weight);
-    return;
+    return ans;
+
 }
 
-int Tv1(Node* root, Node* Mv, vector<ObjectL1*> nodesFinal, vector<Edge*> edges) 
+int Tv1(Node* v, vector<ObjectL1*> nodesFinal, vector<Edge*> edges) 
 {
-	int mv=Mv->post_order_number;
-    int v=root->post_order_number;
-    int d=0;
-    for(int i=mv;i<v;i++)
+    Node* Mv = find_mv(v);
+	int mv = Mv->post_order_number;
+    int j = v->post_order_number;
+    int d = 0;
+    for(int i = mv; i <= j; i++)
     {
-        
-        Node* parent=Mv->parent;
-        while(parent!=root)
-        {
-            d+=distance(nodesFinal[i-1]->node, root, edges);      //add distance of child to parent
-        }
+        d += distance(nodesFinal[i-1]->node, v, edges) * nodesFinal[i-1]->node->weight;      //add distance of child to parent
     }
+
 	return d;
 }
 
-int Ruv1(int v, int u, vector<ObjectL1*> nodesFinal, vector<Edge*> edges)
+int Ruv1(Node* u, Node* v, vector<ObjectL1*> nodesFinal, vector<Edge*> edges)   //u: parent node;, v: child node
 {
     int ans=0;
-    for(int i=v;i<u;i++)
+    int i = u->post_order_number;
+    int j = v->post_order_number;
+
+    for(int k=j+1;k<i;k++)
     {
-        int w=nodesFinal[i]->node->weight;
-        ans+=w*distance(nodesFinal[i]->node, nodesFinal[u-1]->node, edges);
+        int w=nodesFinal[k-1]->node->weight;
+        ans+=w * distance(nodesFinal[k-1]->node, u, edges);
     }
     return ans;
 }
 
-int Luv0(int v, int u, vector<ObjectL1*> nodesFinal, vector<Edge*> edges)
+int Luv0(Node* u, Node* v, vector<ObjectL1*> nodesFinal, vector<Edge*> edges)
 {
     int ans=0;
-    int mv=((nodesFinal[v-1])->mv)->post_order_number;
-    int mu=((nodesFinal[u-1])->mv)->post_order_number;
-    for(int i=mu;i<mv-1;i++)
+    int i = v->post_order_number;
+    int j = u->post_order_number;
+    int mv=((nodesFinal[i-1])->mv)->post_order_number;
+    int mu=((nodesFinal[j-1])->mv)->post_order_number;
+    for(int k=mu; k<mv; k++)
     {
-        int w=nodesFinal[i]->node->weight;
-        ans+=w*distance(nodesFinal[i]->node, nodesFinal[u-1]->node, edges);
+        int w=nodesFinal[k-1]->node->weight;
+        ans+=w * distance(nodesFinal[k-1]->node, nodesFinal[j-1]->node, edges);
     }
     return ans;
 }
+
 /*
 int main() 
 {
@@ -320,10 +325,10 @@ int main()
         }
 
         
-    for(int i=0;i<n;i++)
-    {
-        // addEdge()
-    }
+//     for(int i=0;i<n;i++)
+//     {
+//         // addEdge()
+//     }
         // int n=7; 
         int k=4;  
         vector<Node*> nodes;
@@ -350,40 +355,54 @@ int main()
         nodes.push_back(seven);
         (one->node_child).push_back(six);
         (one->node_child).push_back(seven);
-        
+        Node* eight = new Node(8, five);
+        Node* nine = new Node(9, eight);
+        five->node_child.push_back(eight);
+        eight->node_child.push_back(nine);
+
+        vector <Edge*> edge_vec;
+        Edge* one_ = new Edge(1, one, root);
+        Edge* two_ = new Edge(1, two, root);
+        Edge* three_ = new Edge(1, three, root);
+        Edge* four_ = new Edge(1, four, root);
+        Edge* five_ = new Edge(1, five, root);
+        Edge* six_ = new Edge(1, six, one);
+        Edge* seven_ = new Edge(1, seven, one);
+        Edge* eight_ = new Edge(1, eight, five);
+        Edge* nine_ = new Edge(1, nine, eight);
 
         
-        int graph[n][n];				//Adjaceny matrix of the tree
+//         int graph[n][n];				//Adjaceny matrix of the tree
         
         // cin>>n;
-        graph[1][0]=10;
-        graph[2][0]=10;
-        graph[3][0]=10;
-        graph[4][0]=10;
-        graph[5][0]=10;
-        graph[6][1]=10;
-        graph[7][1]=10;
+//         graph[1][0]=10;
+//         graph[2][0]=10;
+//         graph[3][0]=10;
+//         graph[4][0]=10;
+//         graph[5][0]=10;
+//         graph[6][1]=10;
+//         graph[7][1]=10;
 
-        vector<vector<int>> graph1;         //duplicate 
+//         vector<vector<int>> graph1;         //duplicate 
 
-        vector<Edge*> edges;                //VECTOR CONTAINING EDGES
-        for (int i = 0; i < n; i++)
-        {
-            /* code */
-            vector<int> v;
-            for (int i1 = 0; i1 < n; i1++)
-            {
-                /* code */
-                v.push_back(graph[i][i1]);
-                if(graph[i][i1]!=0)
-                {
-                    Edge* e=new Edge(graph[i][i1], nodes[i], nodes[i1]);
-                    edges.push_back(e);
-                }
+//         vector<Edge*> edges;                //VECTOR CONTAINING EDGES
+//         for (int i = 0; i < n; i++)
+//         {
+//             /* code */
+//             vector<int> v;
+//             for (int i1 = 0; i1 < n; i1++)
+//             {
+//                 /* code */
+//                 v.push_back(graph[i][i1]);
+//                 if(graph[i][i1]!=0)
+//                 {
+//                     Edge* e=new Edge(graph[i][i1], nodes[i], nodes[i1]);
+//                     edges.push_back(e);
+//                 }
 
-            }
-            graph1[i]=v;
-        }
+//             }
+//             graph1[i]=v;
+//         }
     /////////////////////////////////INPUT OVER//////////////////////////////////////////////
 
     /////////////////////////////////////L1//////////////////////////////////////////
@@ -410,8 +429,8 @@ int main()
             cout<<"node number: "<<node_number<<endl;
             cout<<"post_order_number: "<<(obj->node)->post_order_number<<endl<<endl;
         }
-
-        cout<<"size of vec is "<<vec.size()<<endl;
+	
+	cout<<"size of vec is "<<vec.size()<<endl;
         for(int i=0;i<vec.size();i++)
         {
             
@@ -420,6 +439,18 @@ int main()
             cout<<" with its parent as "<<vec[i]->node->parent->weight;
             cout<<endl;
         }
+	
+	int apple =0;
+        apple = T_uv_Zero(root, four, vec, edge_vec);
+        cout<<"T_uv_zero for node four: "<<apple<<endl;
+
+        apple = Tv1(root, vec, edge_vec);
+        cout<<"Tv1 for root: "<<apple<<endl;
+        apple = Ruv1(root, four, vec, edge_vec);
+        cout<<"Ruv1 for node four: "<<apple<<endl;
+        apple = Luv0(root, four, vec, edge_vec);
+        cout<<"Luv0 for node four: "<<apple<<endl;
+	
     ///////////////////////////////////////////L1////////////////////////////////
     ///////////////////////////////////////////L2/////////////////////////////////////
         int vec1[vec.size()];
