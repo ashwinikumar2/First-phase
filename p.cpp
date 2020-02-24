@@ -1,14 +1,15 @@
 #include <bits/stdc++.h>
-#include <fstream>
-#include <string>
-#define INF INT_MAX
+// #include <fstream>
+// #include <string>
+
 using namespace std;
 //name space std;
+#define MAX_SIZE INFINITY
 
 class Node
 {
     public:
-    int initialid; //initial id given in input file
+  
     int weight; 			        //weight of the node.
     Node* parent;			        //parent of the node(only one parent is possible)
     int post_order_number;
@@ -80,8 +81,6 @@ public:
 };
 
 int Luvt(int t, Node* v, Node* u, vector<ObjectL1*> nodesFinal, vector<Edge*> edges);
-
-
 
 Node* find_mv(Node* current_node)
 {
@@ -158,8 +157,8 @@ int distance(Node* x, Node* u, vector<Edge*> edge_vector){
     int dist = 0;
     int  y=0;
     if(x==u){
-	        return 0;
-	    }
+        return 0;
+    }
     while(parent!=u ){
         y = search_edge(child, parent, edge_vector);
         dist += y;
@@ -170,214 +169,217 @@ int distance(Node* x, Node* u, vector<Edge*> edge_vector){
     y = search_edge(child, parent, edge_vector);
     dist += y;
     return dist;
+    
+
 }
 
 
 
 int T_uv_Zero(Node* u, Node* v, vector<ObjectL1*> nodesFinal, vector<Edge*> edge_vector)
-	{
-	    Node* Mv = find_mv(v);
-	    int i = Mv->post_order_number;
-	    int j = v->post_order_number;
-	    int ans = 0;
-	
-	
-	
-	    for(int k=i; k<=j; k++){
-	        int wt = nodesFinal[k-1]->node->weight;
-	        ans += wt * distance(nodesFinal[k-1]->node, u, edge_vector);
-	    }
-	    return ans;
-	
-	}
-	
-	int Tv1(Node* v, vector<ObjectL1*> nodesFinal, vector<Edge*> edges) 
-	{
-	    Node* Mv = find_mv(v);
-		int mv = Mv->post_order_number;
-	    int j = v->post_order_number;
-	    int d = 0;
-	    for(int i = mv; i <= j; i++)
-	    {
-	        d += distance(nodesFinal[i-1]->node, v, edges) * nodesFinal[i-1]->node->weight;      //add distance of child to parent
-	
-	
-	
-	
-	
-	    }
-	
-		return d;
-	}
-	
-	int Ruv1(Node* u, Node* v, vector<ObjectL1*> nodesFinal, vector<Edge*> edges)   //u: parent node;, v: child node
-	{
-	    int ans=0;
-	    int i = u->post_order_number;
-	    int j = v->post_order_number;
-	
-	    for(int k=j+1;k<i;k++)
-	    {
-	        int w=nodesFinal[k-1]->node->weight;
-	        ans+=w * distance(nodesFinal[k-1]->node, u, edges);
-	    }
-	    return ans;
-	}
-	
-	int Luv0(Node* u, Node* v, vector<ObjectL1*> nodesFinal, vector<Edge*> edges)
-	{
-	    int ans=0;
-	    int i = v->post_order_number;
-	    int j = u->post_order_number;
-	    int mv=((nodesFinal[i-1])->mv)->post_order_number;
-	    int mu=((nodesFinal[j-1])->mv)->post_order_number;
-	    for(int k=mu; k<mv; k++)
-	    {
-	        int w=nodesFinal[k-1]->node->weight;
-	        ans+=w * distance(nodesFinal[k-1]->node, nodesFinal[j-1]->node, edges);
-	    }
-	    return ans;
-	}
+{
+    Node* Mv = find_mv(v);
+    int i = Mv->post_order_number;
+    int j = v->post_order_number;
+    int ans = 0;
 
-    int minimum(int a, int b){
-	    if(a<b)
-	    return a;
-	    else b;
-	}
-	int maximum(int a, int b){
-	    if(a<b)
-	    return b;
-	    return a;
-	}
-	
-	int tree_size(int u, vector<ObjectL1* > vec)
-	{
-	    
-	    int mu = (vec[u-1])->mv->post_order_number;
-	    return u-mu+1;
-	
-	}
-	
-	int LuvSize(int u, int v, vector<ObjectL1*> nodesFinal){
-	    int mv = nodesFinal[v-1]->mv->post_order_number;
-	    int mu = nodesFinal[u-1]->mv->post_order_number;
-	    return mv-mu;
-	}
-	
-	
-	
-	int T_u_t(int t, Node* u, vector<ObjectL1*> nodesFinal, vector<Edge*> edges)
+    for(int k=i; k<=j; k++){
+        int wt = nodesFinal[k-1]->node->weight;
+        ans += wt * distance(nodesFinal[k-1]->node, u, edge_vector);
+    }
+    return ans;
 
-	{
-	    if(t>= (u->post_order_number - find_mv(u)->post_order_number + 1))
-	    return 0;
-	    //base case.
-	    if(t == 1){
-	        int x = Tv1(u, nodesFinal, edges);
-	        return x;
-	    }
-	
-	    //recursive
-	    int mu = find_mv(u)->post_order_number;
-	    int j = u->post_order_number;
-	    int y=INF;
-	    for(int i=mu; i<j; i++)
-        {
-            int x=INF;
-            for(int l = maximum(1, t-1-LuvSize(j, i, nodesFinal)); l<minimum(t, tree_size(i,nodesFinal)); l++){
-	
-	            int a = T_u_t(l, (nodesFinal[i-1])->node, nodesFinal, edges);
-	            a = a + Luvt(t-l-1, (nodesFinal[i-1])->node, u, nodesFinal, edges);
-	            a = a + Ruv1(u, (nodesFinal[i-1])->node, nodesFinal, edges);
-	            if(a<x) x=a;
-	
-	        }
-	        if(x<y)
-	        y=x;
-	    }
-	
-	    return y;
-	}
-	
-	int Luvt(int t, Node* v, Node* u, vector<ObjectL1*> nodesFinal, vector<Edge*> edges){
-	
-	    if(t>= (find_mv(v)->post_order_number - find_mv(u)->post_order_number))
-	        return 0;
-	
-	    //base case
-	    if(t==0){
-	        return Luv0(u, v, nodesFinal, edges);
-	    }
-	    int mu = find_mv(u)->post_order_number;
-	    int mv = find_mv(v)->post_order_number;
-	    int net_min =INF;
-	    for(int x=mu; x<mv; x++){
-	        int min = INF;
-	        for(int i=maximum(1, t-LuvSize(u->post_order_number, x, nodesFinal)); i<minimum(t, tree_size(x, nodesFinal)); i++){
-	            Node* ex = nodesFinal[x-1]->node;
-	            int a = T_u_t(i, ex, nodesFinal, edges);
-	            a = a + Luvt(t-i, ex, u, nodesFinal, edges);
-	            a = a + Ruv1(u, ex, nodesFinal, edges);
-	            a = a - Ruv1(u, v, nodesFinal, edges);
-	            a = a - T_uv_Zero(u, v, nodesFinal, edges);
-	
-	            if(a<min)   min= a;
-	        }
-	        if(min<net_min) net_min = min;
-	    }
-	    return net_min;
-	}
-	
-	int A_uvt(Node* u, Node* v, int t, vector<ObjectL1*> nodesFinal, vector<Edge*> edges){
-	
-	    int post_v = v->post_order_number;
-	    int a = Luvt(t, nodesFinal[post_v -1]->mv_prime, u, nodesFinal, edges);
-	    a = a + Ruv1(u, nodesFinal[post_v -1]->mv_prime, nodesFinal, edges);
-	    a = a + T_uv_Zero(u, nodesFinal[post_v -1]->mv_prime, nodesFinal, edges);
-	    a = a - Ruv1(u, v, nodesFinal, edges);
-	    a = a - T_uv_Zero(u, v, nodesFinal, edges);
-	    return a;
-	
-	}
-	
-	int B_uvt(Node* u, Node* v, int t, vector<ObjectL1*> nodesFinal, vector<Edge*> edges){
-	
-	    if(t>= (find_mv(v)->post_order_number - find_mv(u)->post_order_number))
-	        return 0;
-	
-	    //base case
-	    if(t==0){
-	        return Luv0(u, v, nodesFinal, edges);
-	    }
-	    int mu = find_mv(u)->post_order_number;
-	    int mv = find_mv(v)->post_order_number;
-	    int net_min =INF;
-	    for(int x=mv-1; x<mv; x++){
-	        int min = INF;
-	        for(int i=maximum(1, t-LuvSize(u->post_order_number, x, nodesFinal)); i<minimum(t, tree_size(x, nodesFinal)); i++){
-	            Node* ex = nodesFinal[x-1]->node;
-	            int a = T_u_t(i, ex, nodesFinal, edges);
-	            a = a + Luvt(t-i, ex, u, nodesFinal, edges);
-	            a = a + Ruv1(u, ex, nodesFinal, edges);
-	            a = a - Ruv1(u, v, nodesFinal, edges);
-	            a = a - T_uv_Zero(u, v, nodesFinal, edges);
-	
-	            if(a<min)   min= a;
-	        }
-	        if(min<net_min) net_min = min;
-	    }
-	    return net_min;
-	
-	}
-	
-	int L_uvt_theo3(Node* u, Node* v, int t, vector<ObjectL1*> nodesFinal, vector<Edge*> edges){
-	    int a = A_uvt(u, v, t, nodesFinal, edges);
-	    int b = B_uvt(u, v, t, nodesFinal, edges);
-	    return minimum(a, b);
-	}
+}
+
+int Tv1(Node* v, vector<ObjectL1*> nodesFinal, vector<Edge*> edges) 
+{
+    Node* Mv = find_mv(v);
+	int mv = Mv->post_order_number;
+    int j = v->post_order_number;
+    int d = 0;
+    for(int i = mv; i <= j; i++)
+    {
+        d += distance(nodesFinal[i-1]->node, v, edges) * nodesFinal[i-1]->node->weight;      //add distance of child to parent
+    }
+
+	return d;
+}
+
+int Ruv1(Node* u, Node* v, vector<ObjectL1*> nodesFinal, vector<Edge*> edges)   //u: parent node;, v: child node
+{
+    int ans=0;
+    int i = u->post_order_number;
+    int j = v->post_order_number;
+
+    for(int k=j+1;k<i;k++)
+    {
+        int w=nodesFinal[k-1]->node->weight;
+        ans+=w * distance(nodesFinal[k-1]->node, u, edges);
+    }
+    return ans;
+}
+
+int Luv0(Node* u, Node* v, vector<ObjectL1*> nodesFinal, vector<Edge*> edges)
+{
+    int ans=0;
+    int i = v->post_order_number;
+    int j = u->post_order_number;
+    int mv=((nodesFinal[i-1])->mv)->post_order_number;
+    int mu=((nodesFinal[j-1])->mv)->post_order_number;
+    for(int k=mu; k<mv; k++)
+    {
+        int w=nodesFinal[k-1]->node->weight;
+        ans+=w * distance(nodesFinal[k-1]->node, nodesFinal[j-1]->node, edges);
+    }
+    return ans;
+}
+
+int minimum(int a, int b){
+    if(a<b)
+    return a;
+    else b;
+}
+int maximum(int a, int b){
+    if(a<b)
+    return b;
+    return a;
+}
+
+int tree_size(int u, vector<ObjectL1* > vec)
+{
+    
+    int mu = (vec[u-1])->mv->post_order_number;
+    return u-mu+1;
+}
+
+int LuvSize(int u, int v, vector<ObjectL1*> nodesFinal){
+    int mv = nodesFinal[v-1]->mv->post_order_number;
+    int mu = nodesFinal[u-1]->mv->post_order_number;
+    return mv-mu;
+}
+
+
+int T_u_t(int t, Node* u, vector<ObjectL1*> nodesFinal, vector<Edge*> edges)
+{   cout<<"t: "<<t<<endl;
+    if(t>= (u->post_order_number - find_mv(u)->post_order_number + 1))
+    return 0;
+    //base case.
+    if(t == 1){
+        int x = Tv1(u, nodesFinal, edges);
+        return x;
+    }
+
+    //recursive
+    int mu = find_mv(u)->post_order_number;
+    int j = u->post_order_number;
+    int y=MAX_SIZE;
+    for(int i=mu; i<j; i++){
+
+        int x=MAX_SIZE;
+        
+        for(int l = maximum(1, t-1-LuvSize(j, i, nodesFinal)); l<minimum(t, tree_size(i,nodesFinal)); l++){
+            cout<<"l: "<<l<<endl;
+            int a = T_u_t(l, (nodesFinal[i-1])->node, nodesFinal, edges);
+            cout<<"a: "<<a<<"  "<<"t-l-1: "<<t-l-1<<endl;
+            a = a + Luvt(t-l-1, (nodesFinal[i-1])->node, u, nodesFinal, edges);
+            cout<<"a after Luvt: "<<a<<endl;
+            a = a + Ruv1(u, (nodesFinal[i-1])->node, nodesFinal, edges);
+            cout<<"a after Ruv1: "<<a<<endl;
+            if(a<x) x=a;
+
+        }
+        if(x<y)
+        y=x;
+    }
+
+    return y;
+}
+
+int Luvt(int t, Node* v, Node* u, vector<ObjectL1*> nodesFinal, vector<Edge*> edges){
+    //negative case
+    if(t<0)
+    return 0;
+
+    if(t>= (find_mv(v)->post_order_number - find_mv(u)->post_order_number))
+        return 0;
+
+    //base case
+    if(t==0){
+        return Luv0(u, v, nodesFinal, edges);
+    }
+    int mu = find_mv(u)->post_order_number;
+    int mv = find_mv(v)->post_order_number;
+    int net_min =MAX_SIZE;
+    for(int x=mu; x<mv; x++){
+        int min = MAX_SIZE;
+        for(int i=maximum(1, t-LuvSize(u->post_order_number, x, nodesFinal)); i<minimum(t, tree_size(x, nodesFinal)); i++){
+            Node* ex = nodesFinal[x-1]->node;
+            int a = T_u_t(i, ex, nodesFinal, edges);
+            a = a + Luvt(t-i, ex, u, nodesFinal, edges);
+            a = a + Ruv1(u, ex, nodesFinal, edges);
+            a = a - Ruv1(u, v, nodesFinal, edges);
+            a = a - T_uv_Zero(u, v, nodesFinal, edges);
+
+            if(a<min)   min= a;
+        }
+        if(min<net_min) net_min = min;
+    }
+    cout<<"happy"<<endl;
+    if(net_min != MAX_SIZE)
+    return net_min;
+    cout<<"see"<<endl;
+    return 0;
+}
+
+int A_uvt(Node* u, Node* v, int t, vector<ObjectL1*> nodesFinal, vector<Edge*> edges){
+
+    int post_v = v->post_order_number;
+    int a = Luvt(t, nodesFinal[post_v -1]->mv_prime, u, nodesFinal, edges);
+    a = a + Ruv1(u, nodesFinal[post_v -1]->mv_prime, nodesFinal, edges);
+    a = a + T_uv_Zero(u, nodesFinal[post_v -1]->mv_prime, nodesFinal, edges);
+    a = a - Ruv1(u, v, nodesFinal, edges);
+    a = a - T_uv_Zero(u, v, nodesFinal, edges);
+    return a;
+
+}
+
+int B_uvt(Node* u, Node* v, int t, vector<ObjectL1*> nodesFinal, vector<Edge*> edges){
+
+    if(t>= (find_mv(v)->post_order_number - find_mv(u)->post_order_number))
+        return 0;
+
+    //base case
+    if(t==0){
+        return Luv0(u, v, nodesFinal, edges);
+    }
+    int mu = find_mv(u)->post_order_number;
+    int mv = find_mv(v)->post_order_number;
+    int net_min = MAX_SIZE;
+    for(int x=mv-1; x<mv; x++){
+        int min = MAX_SIZE;
+        for(int i=maximum(1, t-LuvSize(u->post_order_number, x, nodesFinal)); i<minimum(t, tree_size(x, nodesFinal)); i++){
+            Node* ex = nodesFinal[x-1]->node;
+            int a = T_u_t(i, ex, nodesFinal, edges);
+            a = a + Luvt(t-i, ex, u, nodesFinal, edges);
+            a = a + Ruv1(u, ex, nodesFinal, edges);
+            a = a - Ruv1(u, v, nodesFinal, edges);
+            a = a - T_uv_Zero(u, v, nodesFinal, edges);
+
+            if(a<min)   min= a;
+        }
+        if(min<net_min) net_min = min;
+    }
+    return net_min;
+
+}
+
+int L_uvt_theo3(Node* u, Node* v, int t, vector<ObjectL1*> nodesFinal, vector<Edge*> edges){
+    int a = A_uvt(u, v, t, nodesFinal, edges);
+    int b = B_uvt(u, v, t, nodesFinal, edges);
+    return minimum(a, b);
+}
 /*
 int main() 
-{
+// {
 // your code goes here
 	
 	//////////////////////////////INPUT STARTS////////////////////////////////////////////////
@@ -418,25 +420,25 @@ return 0;
 */
 
 //this main is to test the L1 function
-void addEdge(vector<int> adj[], int u, int v) 
-{ 
-    adj[u].push_back(v); 
-    adj[v].push_back(u); 
-} 
+// void addEdge(vector<int> adj[], int u, int v) 
+// { 
+//     adj[u].push_back(v); 
+//     adj[v].push_back(u); 
+// } 
   
-// A utility function to print the adjacency list 
-// representation of graph 
-void printGraph(vector<int> adj[], int V) 
-{ 
-    for (int v = 0; v < V; ++v) 
-    { 
-        cout << "\n Adjacency list of vertex "
-             << v << "\n head "; 
-        for (auto x : adj[v]) 
-           cout << "-> " << x; 
-        printf("\n"); 
-    } 
-} 
+// // A utility function to print the adjacency list 
+// // representation of graph 
+// void printGraph(vector<int> adj[], int V) 
+// { 
+//     for (int v = 0; v < V; ++v) 
+//     { 
+//         cout << "\n Adjacency list of vertex "
+//              << v << "\n head "; 
+//         for (auto x : adj[v]) 
+//            cout << "-> " << x; 
+//         printf("\n"); 
+//     } 
+// } 
 int main() 
 {
     // your code goes here
@@ -578,32 +580,32 @@ int main()
 	        edge_vec.push_back(nine_);
 
         
-        int graph[n][n];				//Adjaceny matrix of the tree
+//         int graph[n][n];				//Adjaceny matrix of the tree
         
         // cin>>n;
-        graph[1][0]=10;
-        graph[2][0]=10;
-        graph[3][0]=10;
-        graph[4][0]=10;
-        graph[5][0]=10;
-        graph[6][1]=10;
-        graph[7][1]=10;
-        vector<Edge*> edges;                //VECTOR CONTAINING EDGES
-        for (int i = 0; i < n; i++)
-        {
-            /* code */
-            // vector<int> v;
-            for (int i1 = 0; i1 < n; i1++)
-            {
-                /* code */
-                // v.push_back(graph[i][i1]);
-                if(graph[i][i1]!=0)
-                {
-                    Edge* e=new Edge(graph[i][i1], nodes[i], nodes[i1]);
-                    edges.push_back(e);
-                }
+//         graph[1][0]=10;
+//         graph[2][0]=10;
+//         graph[3][0]=10;
+//         graph[4][0]=10;
+//         graph[5][0]=10;
+//         graph[6][1]=10;
+//         graph[7][1]=10;
+//         vector<Edge*> edges;                //VECTOR CONTAINING EDGES
+//         for (int i = 0; i < n; i++)
+//         {
+//             /* code */
+//             // vector<int> v;
+//             for (int i1 = 0; i1 < n; i1++)
+//             {
+//                 /* code */
+//                 // v.push_back(graph[i][i1]);
+//                 if(graph[i][i1]!=0)
+//                 {
+//                     Edge* e=new Edge(graph[i][i1], nodes[i], nodes[i1]);
+//                     edges.push_back(e);
+//                 }
 
-            }
+//             }
 
             //  cout<<"node number: "<<obj->node_number<<endl;
             // graph1[i]=v;
@@ -612,137 +614,143 @@ int main()
 
     /////////////////////////////////////L1//////////////////////////////////////////
          vector<ObjectL1*> vec;				//vector conataining nodes in post order
-	        int node_number = 0;
-	        cout<<"start\n";
-	        L1(root, vec, node_number);
-	        int size = vec.size();
-	        if(size==node_number){
-	            cout<<"hurrah!\n";
-	        }
-	        for(int i=0; i<size; i++){
-	            ObjectL1* obj = vec[i];
-	            int wt = (obj->node)->weight;
-	            int wt1 = (obj->mv)->weight;
-	            int wt2;
-	            if(obj->mv_prime == nullptr)
-	            wt2 =-1;
-	            else
-	            wt2 = (obj->mv_prime)->weight;
-	            cout<<"weight of node: "<<wt<<"\n";
-	            cout<<"weight of mv: "<<wt1<<"\n";
-	            cout<<"weight of mv_prime: "<<wt2<<"\n";
-	            cout<<"node number: "<<obj->node_number<<endl;
-	            cout<<"post_order_number: "<<(obj->node)->post_order_number<<endl<<endl;
-	        }
-	
-	        // cout<<"size of vec is "<<vec.size()<<endl;
-	        // for(int i=0;i<vec.size();i++)
-	        // {
-	            
-	        //     cout<<"node "<<vec[i]->node->weight<<", number is "<<vec[i]->node_number;
-	        //     if(vec[i]->node->parent!=nullptr)
-	        //     cout<<", with its parent as "<<vec[i]->node->parent->weight;
-	        //     cout<<endl;
-	        // }
-	
-	        //check T_uv_zero
-	        int apple =0;
-	        apple = T_uv_Zero(root, four, vec, edge_vec);
-	        cout<<"T_uv_zero for node four: "<<apple<<endl;
-	
-	        apple = Tv1(root, vec, edge_vec);
-	        cout<<"Tv1 for root: "<<apple<<endl;
-	        apple = Ruv1(root, four, vec, edge_vec);
-	        cout<<"Ruv1 for node four: "<<apple<<endl;
-	        apple = Luv0(root, four, vec, edge_vec);
-	        cout<<"Luv0 for node four: "<<apple<<endl;
-	
-	        int Tv1Array[size];
-	        int T_uv_0Array[size];
-	        int Ruv1Array[size];
-	        int Luv0Array[size];
-	        //initialization
-	        for(int i=0; i<size; i++){
-	            Tv1Array[i] = -1;
-	            T_uv_0Array[i] = -1;
-	            Ruv1Array[i] = -1;
-	            Luv0Array[i] = -1;
-	        }
-	
-	        //array dec
-	        int array[size][k];
-	        
-	        for (int u = 1; u <= size;u++)
-	        {
-	    //////////////////////////////////////////////L2//////////////////////////
-	    //////////////////////////////////////////////L3//////////////////////////
-	            int mvOfU=vec[u-1]->mv->post_order_number;
+        int node_number = 0;
+        cout<<"start\n";
+        L1(root, vec, node_number);
+        int size = vec.size();
+        if(size==node_number){
+            cout<<"hurrah!\n";
+        }
+        for(int i=0; i<size; i++){
+            ObjectL1* obj = vec[i];
+            int wt = (obj->node)->weight;
+            int wt1 = (obj->mv)->weight;
+            int wt2;
+            if(obj->mv_prime == nullptr)
+            wt2 =-1;
+            else
+            wt2 = (obj->mv_prime)->weight;
+            // cout<<"weight of node: "<<wt<<"\n";
+            // cout<<"weight of mv: "<<wt1<<"\n";
+            // cout<<"weight of mv_prime: "<<wt2<<"\n";
+            // cout<<"node number: "<<obj->node_number<<endl;
+            // cout<<"post_order_number: "<<(obj->node)->post_order_number<<endl<<endl;
+        }
+
+        // cout<<"size of vec is "<<vec.size()<<endl;
+        // for(int i=0;i<vec.size();i++)
+        // {
+            
+        //     cout<<"node "<<vec[i]->node->weight<<", number is "<<vec[i]->node_number;
+        //     if(vec[i]->node->parent!=nullptr)
+        //     cout<<", with its parent as "<<vec[i]->node->parent->weight;
+        //     cout<<endl;
+        // }
+
+        //check T_uv_zero
+        int apple =0;
+        apple = T_uv_Zero(one, six, vec, edge_vec);
+        cout<<"T_uv_zero for node six with one: "<<apple<<endl;
+
+        apple = Tv1(four, vec, edge_vec);
+        cout<<"Tv1 for root: "<<apple<<endl;
+        apple = Ruv1(root, four, vec, edge_vec);
+        cout<<"Ruv1 for node four: "<<apple<<endl;
+        apple = Luv0(root, three, vec, edge_vec);
+        cout<<"Luv0 for node four: "<<apple<<endl;
+
+        int a = T_u_t(k, root, vec, edge_vec);
+        cout<<"T_u_t: "<<a<<endl;
+
+
+        int Tv1Array[size];
+        int T_uv_0Array[size];
+        int Ruv1Array[size];
+        int Luv0Array[size];
+        //initialization
+        for(int i=0; i<size; i++){
+            Tv1Array[i] = -1;
+            T_uv_0Array[i] = -1;
+            Ruv1Array[i] = -1;
+            Luv0Array[i] = -1;
+        }
+
+        //array dec
+        int array[size][k];
+        
+        for (int u = 1; u <= size;u++)
+        {
+    //////////////////////////////////////////////L2//////////////////////////
+    //////////////////////////////////////////////L3//////////////////////////
+                int mvOfU=vec[u-1]->mv->post_order_number;
+	            cout<<"FOR NODE "<<u<<" WHOSE MV= "<<mvOfU<<":"<<endl;
+	            cout<<"Entering into the subtree Tu=T"<<u<<" :"<<endl;
 	            for(int v=mvOfU;v<=u;v++)                 //v belongs to Tu
-	
-	            {
+	            {	
+	            	cout<<"node under observation is "<<v<<endl;
 	                int mvv = (vec[v-1]->mv)->post_order_number;
 	                
-	    //CHECK: if mv of some node is at mv-1 then only do the below
 	                int Tv11=Tv1(vec[v-1]->node, vec, edge_vec);		//take inputs the length of each edge and prepare a adjacency matrix for that
 	                                                //also prepare a vector of weights of vertices
-	                
-	                int valTuv0 = T_uv_Zero(vec[v-1]->node, vec[u-1]->node, vec, edge_vec);    //value of valTuv0 is updated
-	                
+	                cout<<"||Tv||1= "<<Tv11<<endl;
+	                int valTuv0 = T_uv_Zero( vec[u-1]->node, vec[v-1]->node, vec, edge_vec);    //value of valTuv0 is updated
+	                cout<<"||Tu,v||0= "<<valTuv0<<endl;
 	                int ruv1=Ruv1(vec[u-1]->node, vec[v-1]->node, vec, edge_vec);
-	                int luv0=Luv0(vec[u-1]->node, vec[v-1]->node, vec, edge_vec);
-	
+	                cout<<"||Ru,v||1= "<<ruv1<<endl;
+	                int luv0 = Luv0(vec[u-1]->node, vec[v-1]->node, vec, edge_vec);
+					cout<<"||Lu,v||0= "<<luv0<<endl;
 	                //storing 
 	                Tv1Array[u-1] = Tv11;
+	                cout<<"value of Tv1Array set to "<<Tv1Array[u-1]<<endl;
 	                T_uv_0Array[u-1] = valTuv0;
+	                cout<<"value of Tv1Array set to "<<Tv1Array[u-1]<<endl;
 	                Ruv1Array[u-1] = ruv1;
+	                cout<<"value of Tv1Array set to "<<Tv1Array[u-1]<<endl;
 	                Luv0Array[u-1] = luv0;
-	            }
-	
-	    ///////////////////////////////////////////////L3/////////////////////////
-	    ///////////////////////////////////////////////L4/////////////////////////
-	
-	            for(int t=2;t<=k;t++)
-	            {
-	                int mvv=vec[u-1]->mv->post_order_number +1;
-	
-	    ///////////////////////////////////L4/////////////////////////////////
-	    ///////////////////////////////////////////////L5/////////////////////            
-	                for (int v = mvv; v <= u-1 ; v++)
-	                {
-	    ///////////////////////////////////////////////L5//////////////////////////////////////////
-	    ///////////////////////////////////////////////L6//////////////////////////////////////////
-	                    /* code */
-	                    int mv=vec[v-1]->mv->post_order_number;
-	                    if(v==mv)
-	                    {
-	                        int luvt1=L_uvt_theo3(vec[u-1]->node, vec[v-1]->node, t-1, vec, edge_vec);
-	                    }
-	
-	                }
-	    ///////////////////////////////////////////////L6///////////////////////////////////////////////
-	                
-	    ///////////////////////////////////////////////L7/////////////////////////////////////////////
-	                int T_ut = T_u_t(t, vec[u-1]->node, vec, edge_vec);
-	                array[u-1][k-1] = T_ut;
-	    ///////////////////////////////////////////////L7///////////////////////////////
-	            }
-	
-	    ///////////////////////////////////////////////L8//////////////////////////
-	    //CHECK: how to calculate Tvt for v=[1, u] & t=[1,k]            
-	            for(int j=0; j<size; j++){
-	                int tv1 = Tv1(vec[j]->node, vec, edge_vec);
-	                array[j][0] = tv1;
-	            }
-	    
-	
-	
-	
-	
-	
-	
-	
-	
-	    ////////////////////////////////////////////////L8/////////////////////////////
-	return 0;
-}
+	                cout<<"value of Tv1Array set to "<<Tv1Array[u-1]<<endl;
+
+                    cout<<endl<<endl;
+            }
+
+    ///////////////////////////////////////////////L3/////////////////////////
+    ///////////////////////////////////////////////L4/////////////////////////
+
+            for(int t=2;t<=k;t++)
+            {
+                int mvv=vec[u-1]->mv->post_order_number +1;
+
+    ///////////////////////////////////L4/////////////////////////////////
+    ///////////////////////////////////////////////L5/////////////////////            
+                for (int v = mvv; v <= u-1 ; v++)
+                {
+    ///////////////////////////////////////////////L5//////////////////////////////////////////
+    ///////////////////////////////////////////////L6//////////////////////////////////////////
+                    /* code */
+                    int mv=vec[v-1]->mv->post_order_number;
+                    if(v==mv)
+                    {
+                        int luvt1=L_uvt_theo3(vec[u-1]->node, vec[v-1]->node, t-1, vec, edge_vec);
+                    }
+
+                }
+    ///////////////////////////////////////////////L6///////////////////////////////////////////////
+                
+    ///////////////////////////////////////////////L7/////////////////////////////////////////////
+                int T_ut = T_u_t(t, vec[u-1]->node, vec, edge_vec);
+                array[u-1][k-1] = T_ut;
+    ///////////////////////////////////////////////L7///////////////////////////////
+            }
+
+    ///////////////////////////////////////////////L8//////////////////////////
+    //CHECK: how to calculate Tvt for v=[1, u] & t=[1,k]            
+            for(int j=0; j<size; j++){
+                int tv1 = Tv1(vec[j]->node, vec, edge_vec);
+                array[j][0] = tv1;
+            }
+    
+    ////////////////////////////////////////////////L8/////////////////////////////
+
+        }
+
+        return 0;
 }
