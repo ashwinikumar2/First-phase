@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 #include <fstream>
 #include <string>
-
+#define INF INT_MAX
 using namespace std;
 //name space std;
 
@@ -280,10 +280,10 @@ int T_uv_Zero(Node* u, Node* v, vector<ObjectL1*> nodesFinal, vector<Edge*> edge
 	    //recursive
 	    int mu = find_mv(u)->post_order_number;
 	    int j = u->post_order_number;
-	    int y=INFINITY;
+	    int y=INF;
 	    for(int i=mu; i<j; i++)
         {
-            int x=INFINITY;
+            int x=INF;
             for(int l = maximum(1, t-1-LuvSize(j, i, nodesFinal)); l<minimum(t, tree_size(i,nodesFinal)); l++){
 	
 	            int a = T_u_t(l, (nodesFinal[i-1])->node, nodesFinal, edges);
@@ -310,9 +310,9 @@ int T_uv_Zero(Node* u, Node* v, vector<ObjectL1*> nodesFinal, vector<Edge*> edge
 	    }
 	    int mu = find_mv(u)->post_order_number;
 	    int mv = find_mv(v)->post_order_number;
-	    int net_min =INFINITY;
+	    int net_min =INF;
 	    for(int x=mu; x<mv; x++){
-	        int min = INFINITY;
+	        int min = INF;
 	        for(int i=maximum(1, t-LuvSize(u->post_order_number, x, nodesFinal)); i<minimum(t, tree_size(x, nodesFinal)); i++){
 	            Node* ex = nodesFinal[x-1]->node;
 	            int a = T_u_t(i, ex, nodesFinal, edges);
@@ -351,9 +351,9 @@ int T_uv_Zero(Node* u, Node* v, vector<ObjectL1*> nodesFinal, vector<Edge*> edge
 	    }
 	    int mu = find_mv(u)->post_order_number;
 	    int mv = find_mv(v)->post_order_number;
-	    int net_min =INFINITY;
+	    int net_min =INF;
 	    for(int x=mv-1; x<mv; x++){
-	        int min = INFINITY;
+	        int min = INF;
 	        for(int i=maximum(1, t-LuvSize(u->post_order_number, x, nodesFinal)); i<minimum(t, tree_size(x, nodesFinal)); i++){
 	            Node* ex = nodesFinal[x-1]->node;
 	            int a = T_u_t(i, ex, nodesFinal, edges);
@@ -526,6 +526,7 @@ int main()
 	int k=0;
         cout<<"give k: "<<endl;
         cin>>k;
+        int n=9;
             vector<Node*> nodes;
 	        Node* root = new Node(0, nullptr);
 	        nodes.push_back(root);
@@ -733,6 +734,14 @@ int main()
 	                array[j][0] = tv1;
 	            }
 	    
+	
+	
+	
+	
+	
+	
+	
+	
 	    ////////////////////////////////////////////////L8/////////////////////////////
 	return 0;
 }
