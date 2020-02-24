@@ -4,7 +4,7 @@
 
 using namespace std;
 //name space std;
-int Luvt(int t, Node* v, Node* u, vector<ObjectL1*> nodesFinal, vector<Edge*> edges);
+#define MAX_SIZE 10000000
 
 class Node
 {
@@ -79,6 +79,8 @@ public:
     }
 
 };
+
+int Luvt(int t, Node* v, Node* u, vector<ObjectL1*> nodesFinal, vector<Edge*> edges);
 
 Node* find_mv(Node* current_node)
 {
@@ -257,7 +259,7 @@ int LuvSize(int u, int v, vector<ObjectL1*> nodesFinal){
 
 
 int T_u_t(int t, Node* u, vector<ObjectL1*> nodesFinal, vector<Edge*> edges)
-{
+{   cout<<"t: "<<t<<endl;
     if(t>= (u->post_order_number - find_mv(u)->post_order_number + 1))
     return 0;
     //base case.
@@ -269,16 +271,19 @@ int T_u_t(int t, Node* u, vector<ObjectL1*> nodesFinal, vector<Edge*> edges)
     //recursive
     int mu = find_mv(u)->post_order_number;
     int j = u->post_order_number;
-    int y=INFINITY;
+    int y=MAX_SIZE;
     for(int i=mu; i<j; i++){
 
-        int x=INFINITY;
+        int x=MAX_SIZE;
         
         for(int l = maximum(1, t-1-LuvSize(j, i, nodesFinal)); l<minimum(t, tree_size(i,nodesFinal)); l++){
-
+            cout<<"l: "<<l<<endl;
             int a = T_u_t(l, (nodesFinal[i-1])->node, nodesFinal, edges);
+            cout<<"a: "<<a<<"  "<<"t-l-1: "<<t-l-1<<endl;
             a = a + Luvt(t-l-1, (nodesFinal[i-1])->node, u, nodesFinal, edges);
+            cout<<"a after Luvt: "<<a<<endl;
             a = a + Ruv1(u, (nodesFinal[i-1])->node, nodesFinal, edges);
+            cout<<"a after Ruv1: "<<a<<endl;
             if(a<x) x=a;
 
         }
@@ -290,6 +295,9 @@ int T_u_t(int t, Node* u, vector<ObjectL1*> nodesFinal, vector<Edge*> edges)
 }
 
 int Luvt(int t, Node* v, Node* u, vector<ObjectL1*> nodesFinal, vector<Edge*> edges){
+    //negative case
+    if(t<0)
+    return 0;
 
     if(t>= (find_mv(v)->post_order_number - find_mv(u)->post_order_number))
         return 0;
@@ -300,9 +308,9 @@ int Luvt(int t, Node* v, Node* u, vector<ObjectL1*> nodesFinal, vector<Edge*> ed
     }
     int mu = find_mv(u)->post_order_number;
     int mv = find_mv(v)->post_order_number;
-    int net_min =INFINITY;
+    int net_min =MAX_SIZE;
     for(int x=mu; x<mv; x++){
-        int min = INFINITY;
+        int min = MAX_SIZE;
         for(int i=maximum(1, t-LuvSize(u->post_order_number, x, nodesFinal)); i<minimum(t, tree_size(x, nodesFinal)); i++){
             Node* ex = nodesFinal[x-1]->node;
             int a = T_u_t(i, ex, nodesFinal, edges);
@@ -315,7 +323,11 @@ int Luvt(int t, Node* v, Node* u, vector<ObjectL1*> nodesFinal, vector<Edge*> ed
         }
         if(min<net_min) net_min = min;
     }
+    cout<<"happy"<<endl;
+    if(net_min != MAX_SIZE)
     return net_min;
+    cout<<"see"<<endl;
+    return 0;
 }
 
 int A_uvt(Node* u, Node* v, int t, vector<ObjectL1*> nodesFinal, vector<Edge*> edges){
@@ -341,9 +353,9 @@ int B_uvt(Node* u, Node* v, int t, vector<ObjectL1*> nodesFinal, vector<Edge*> e
     }
     int mu = find_mv(u)->post_order_number;
     int mv = find_mv(v)->post_order_number;
-    int net_min =INFINITY;
+    int net_min =MAX_SIZE;
     for(int x=mv-1; x<mv; x++){
-        int min = INFINITY;
+        int min = MAX_SIZE;
         for(int i=maximum(1, t-LuvSize(u->post_order_number, x, nodesFinal)); i<minimum(t, tree_size(x, nodesFinal)); i++){
             Node* ex = nodesFinal[x-1]->node;
             int a = T_u_t(i, ex, nodesFinal, edges);
@@ -462,11 +474,11 @@ int main()
             wt2 =-1;
             else
             wt2 = (obj->mv_prime)->weight;
-            cout<<"weight of node: "<<wt<<"\n";
-            cout<<"weight of mv: "<<wt1<<"\n";
-            cout<<"weight of mv_prime: "<<wt2<<"\n";
-            cout<<"node number: "<<obj->node_number<<endl;
-            cout<<"post_order_number: "<<(obj->node)->post_order_number<<endl<<endl;
+            // cout<<"weight of node: "<<wt<<"\n";
+            // cout<<"weight of mv: "<<wt1<<"\n";
+            // cout<<"weight of mv_prime: "<<wt2<<"\n";
+            // cout<<"node number: "<<obj->node_number<<endl;
+            // cout<<"post_order_number: "<<(obj->node)->post_order_number<<endl<<endl;
         }
 
         // cout<<"size of vec is "<<vec.size()<<endl;
@@ -488,8 +500,12 @@ int main()
         cout<<"Tv1 for root: "<<apple<<endl;
         apple = Ruv1(root, four, vec, edge_vec);
         cout<<"Ruv1 for node four: "<<apple<<endl;
-        apple = Luv0(root, four, vec, edge_vec);
+        apple = Luv0(root, three, vec, edge_vec);
         cout<<"Luv0 for node four: "<<apple<<endl;
+
+        int a = T_u_t(k, root, vec, edge_vec);
+        cout<<"T_u_t: "<<a<<endl;
+
 
         int Tv1Array[size];
         int T_uv_0Array[size];
@@ -524,6 +540,7 @@ int main()
                 int ruv1=Ruv1(vec[u-1]->node, vec[v-1]->node, vec, edge_vec);
                 int luv0=Luv0(vec[u-1]->node, vec[v-1]->node, vec, edge_vec);
 
+                // cout<<""
                 //storing 
                 Tv1Array[u-1] = Tv11;
                 T_uv_0Array[u-1] = valTuv0;
