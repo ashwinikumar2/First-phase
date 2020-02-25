@@ -381,6 +381,45 @@ int L_uvt_theo3(Node* u, Node* v, int t, vector<ObjectL1*> nodesFinal, vector<Ed
     return minimum(a, b);
 }
 
+void Proxies(Node* u, int t, vector<ObjectL1*> vec, vector<edges> edge_vec)
+{
+    if(t==1)
+    {
+        cout<<u->post_order_number<<endl;
+        return;
+    }
+    else
+    {
+        int mv=vec[u->post_order_number-1]->mv->post_order_number;      //post order no of Mv of u
+        for(int v=mv;v<=u->post_order_number;v++)
+        {
+            int tv1=Tv1(vec[u->post_order_number-1]->node, vec, edge_vec);
+            int tuv0=T_uv_Zero(u, vec[v-1]->node, vec, edge_vec);
+            int ruv1=Ruv1(u,  vec[v-1]->node, vec, edge_vec);
+            int luv0=Luv0(u,  vec[v-1]->node, vec, edge_vec);
+
+
+        }
+
+        for(int t=2;t<=k;t++)
+        {
+            for(int v=mv;v<=u->post_order_number;v++)
+            {
+                if(v==mv)
+                {
+                    int luvtt=L_uvt_theo3(u,  vec[v-1]->node,t-1, vec, edge_vec);
+                    //Calculate x and c
+
+                }
+            }
+        }
+
+
+    }
+
+
+}
+
 /*
 int main() 
 {
@@ -674,7 +713,7 @@ int main()
 	            Ruv1Array[i] = -1;
 	            Luv0Array[i] = -1;
 	        }
-	
+
 	        //array dec
 	        int array[size][k];
 	        
@@ -685,30 +724,30 @@ int main()
 	    //////////////////////////////////////////////L3//////////////////////////
 	            int mvOfU=vec[u-1]->mv->post_order_number;
 	            cout<<"FOR NODE "<<u<<" WHOSE MV= "<<mvOfU<<":"<<endl;
-	            cout<<"Entering into the subtree Tu=T"<<u<<" :"<<endl;
+	            // cout<<"Entering into the subtree Tu=T"<<u<<" :"<<endl;
 	            for(int v=mvOfU;v<=u;v++)                 //v belongs to Tu
 	            {	
-	            	cout<<"node under observation is "<<v<<endl;
+	            	// cout<<"node under observation is "<<v<<endl;
 	                int mvv = (vec[v-1]->mv)->post_order_number;
 	                
 	                int Tv11=Tv1(vec[v-1]->node, vec, edge_vec);		//take inputs the length of each edge and prepare a adjacency matrix for that
 	                                                //also prepare a vector of weights of vertices
-	                cout<<"||Tv||1= "<<Tv11<<endl;
+	                // cout<<"||Tv||1= "<<Tv11<<endl;
 	                int valTuv0 = T_uv_Zero(vec[u-1]->node, vec[v-1]->node, vec, edge_vec);    //value of valTuv0 is updated
-	                cout<<"||Tu,v||0= "<<valTuv0<<endl;
+	                // cout<<"||Tu,v||0= "<<valTuv0<<endl;
 	                int ruv1=Ruv1(vec[u-1]->node, vec[v-1]->node, vec, edge_vec);
-	                cout<<"||Ru,v||1= "<<ruv1<<endl;
+	                // cout<<"||Ru,v||1= "<<ruv1<<endl;
 	                int luv0=Luv0(vec[u-1]->node, vec[v-1]->node, vec, edge_vec);
-					cout<<"||Lu,v||0= "<<luv0<<endl;
+					// cout<<"||Lu,v||0= "<<luv0<<endl;
 	                //storing T_uv_Zero
 	                Tv1Array[u-1] = Tv11;
-	                cout<<"value of Tv1Array set to "<<Tv1Array[u-1]<<endl;
+	                // cout<<"value of Tv1Array set to "<<Tv1Array[u-1]<<endl;
 	                T_uv_0Array[u-1] = valTuv0;
-	                cout<<"value of T_uv_0Array set to "<<T_uv_0Array[u-1]<<endl;
+	                // cout<<"value of T_uv_0Array set to "<<T_uv_0Array[u-1]<<endl;
 	                Ruv1Array[u-1] = ruv1;
-	                cout<<"value of Ruv1Array set to "<<Ruv1Array[u-1]<<endl;
+	                // cout<<"value of Ruv1Array set to "<<Ruv1Array[u-1]<<endl;
 	                Luv0Array[u-1] = luv0;
-	                cout<<"value of Luv0Array set to "<<Luv0Array[u-1]<<endl;
+	                // cout<<"value of Luv0Array set to "<<Luv0Array[u-1]<<endl;
 
 	                // cout<<"v is "<<vec[v-1]->node->post_order_number<<" with mv= "<<mvv<< " ||Tv||1= "<<Tv11<<" value of ||Tu,v||0= "<<valTuv0<<" ||Ru, v||1="<<ruv1<<" ||Lu,v||0= "<<luv0<<endl;
 
@@ -717,34 +756,42 @@ int main()
 	            }
 	    ///////////////////////////////////////////////L3/////////////////////////
 	    ///////////////////////////////////////////////L4///////////////////////
-			cout<<"u= "<<u<<endl;
+				cout<<"u= "<<u<<endl;
 	            for(int t=2;t<=k;t++)
 	            {
-	                int mvv=vec[u-1]->mv->post_order_number +1;
-					
+	                int mvv=vec[u-1]->mv->post_order_number ;
+                    cout<<"t= "<<t<<endl;
 	    ///////////////////////////////////L4/////////////////////////////////
 	    ///////////////////////////////////////////////L5/////////////////////            
-	                for (int v = mvv; v <= u-1 ; v++)
-	                {
-	    ///////////////////////////////////////////////L5//////////////////////////////////////////
-	    ///////////////////////////////////////////////L6//////////////////////////////////////////
-	                    /* code */
-	                    int mv=vec[v-1]->mv->post_order_number;
-	                    if(v==mv)
-	                    {
+	                if(t>=u-mvv+1){
+						int T_ut=0;
 
-	                        int luvt1=L_uvt_theo3(vec[u-1]->node, vec[v-1]->node, t-1, vec, edge_vec);
-	                      	cout<<"For node v= "<<v<<" Luvt= "<<luvt1<<endl;
-	                    }
-	
+						cout<<"||Tu||t= "<<T_ut<<endl;
+						break;
 	                }
-	    ///////////////////////////////////////////////L6///////////////////////////////////////////////
-	                
-	    ///////////////////////////////////////////////L7/////////////////////////////////////////////
-	                int T_ut = T_u_t(t, vec[u-1]->node, vec, edge_vec);
-	                array[u-1][k-1] = T_ut;
+					
+					else{
+		                for (int v = mvv+1; v <= u-1 ; v++)
+		                {
+		    ///////////////////////////////////////////////L5//////////////////////////////////////////
+		    ///////////////////////////////////////////////L6//////////////////////////////////////////
+		                    /* code */
+		                    int mv=vec[v-1]->mv->post_order_number;
+		                    if(v==mv)
+		                    {
 
-	                cout<<"For t= "<<t<<" value of T_ut= "<<T_ut<<endl;
+		                        int luvt1=L_uvt_theo3(vec[u-1]->node, vec[v-1]->node, t-1, vec, edge_vec);
+		                      	cout<<"For node v= "<<v<<" ||Luv||"<<t-1<<"= "<<luvt1<<endl;
+		                    }
+		                }
+		    ///////////////////////////////////////////////L6///////////////////////////////////////////////
+		                
+		    ///////////////////////////////////////////////L7/////////////////////////////////////////////
+		                int T_ut = T_u_t(t, vec[u-1]->node, vec, edge_vec);
+		                array[u-1][k-1] = T_ut;
+
+		                cout<<"For t= "<<t<<" value of T_ut= "<<T_ut<<endl;
+	            	}
 	    ///////////////////////////////////////////////L7///////////////////////////////
 	            }
 				
@@ -757,6 +804,32 @@ int main()
 	            cout<<endl<<endl;
 	    	}
 	    ////////////////////////////////////////////////L8/////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////
+            //////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            //                  PHASE 2
+
+            // Node* ro=vec[0]->node;
+            // Proxies(ro, k, vec, edge_vec);
+
+            
+
 	return 0;
 
 }
