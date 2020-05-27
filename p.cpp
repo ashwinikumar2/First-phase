@@ -1165,9 +1165,10 @@ int main(int argc, char* argv[])                                // argc?????????
 	        	if(i!=obj_vec.size()-1)
 	        	cout<<nodes_list[i]->pre_order_number<<" ";
 	        	else 
-	        		cout<<nodes_list[i]<<endl;
+	        		cout<<nodes_list[i]->pre_order_number<<endl;
 	        }
 	        cout<<"Total cost: "<<0<<endl;
+	        return 0;
     	}
 
 // cout<<"asdf"<<endl;
