@@ -405,12 +405,12 @@ int LuvSize(int u, int v){
 int T_u_t(int t, Node* u)
 {   
 // cout<<"t: "<<t<<endl;
-	// cout<<"FINDING Tut FOR NODE= "<<u->post_order_number<<" WITH t= "<<t<<endl;
+    // cout<<"FINDING Tut FOR NODE= "<<u->post_order_number<<" WITH t= "<<t<<endl;
     if(t >= (u->post_order_number - nodes_list[nodes_mv_list[u->pre_order_number]]->post_order_number + 1)){
-    	Nu[u->post_order_number]=u->post_order_number-1;
-    	Cu[u->post_order_number]=tree_size(u->post_order_number)-1;
+        Nu[u->post_order_number]=u->post_order_number-1;
+        Cu[u->post_order_number]=tree_size(u->post_order_number)-1;
     return 0;
-	}
+    }
     //base case.
     if(t == 1){
         int x = Tv1(u);
@@ -424,14 +424,14 @@ int T_u_t(int t, Node* u)
     int u_num = u->post_order_number;
     int y=MAX_SIZE;
     for(int i = mu_num; i < u_num; i++)
-    {	
-    	// cout<<"node: "<<i<<"checked "<<endl;
+    {   
+        // cout<<"node: "<<i<<"checked "<<endl;
 
         int x=MAX_SIZE;
         // cout<<"maximum(1, t-1-LuvSize(u_num, i)) = "<<maximum(1, t-1-LuvSize(u_num, i))<<endl;
         // cout<<"maximum(1, t-1-LuvSize(u_num, i))= "<<maximum(1, t-1-LuvSize(u_num, i))<<" minimum(t, tree_size(i))= "<<min(t, tree_size(i))<<endl;
         int tDash=1; 
-        for(int l = maximum(1, t-1-LuvSize(u_num, i)); l<min(t, tree_size(i)+1); l++){	//try min instead of minimum
+        for(int l = maximum(1, t-1-LuvSize(u_num, i)); l<min(t, tree_size(i)+1); l++){  //try min instead of minimum
             // cout<<"l: "<<l<<endl;
             int a = 0;
             // cout<<"Tut["<<i<<"]["<<l<<"]= "<<Tut[i][l]<<endl;
@@ -452,22 +452,22 @@ int T_u_t(int t, Node* u)
             // cout<<"a after Ruv1: "<<a<<endl;
             if(a<x) 
             {
-            	x=a; 
-            	tDash=l;
-            	// Cu[1] = l;
-            	// cout<<"node= "<<(obj_vec[i-1])->node->post_order_number<<" is a proxy with its Tut= "<<a<<endl;
+                x=a; 
+                tDash=l;
+                // Cu[1] = l;
+                // cout<<"node= "<<(obj_vec[i-1])->node->post_order_number<<" is a proxy with its Tut= "<<a<<endl;
             }
 
         }
         if(x<y) 
         {
-        	// cout<<"x= "<<x<<" y= "<<y<<endl;
-        	// cout<<"Tut of "<<i<<" subtree is included in Tut of "<<u->post_order_number<<endl;
-        	// cout<<"x= "<<x<<" y= "<<y<<endl;
-        	y=x; 
-        	Nu[u->post_order_number] = i;				//i is Nu,1 for u
-        	Cu[u->post_order_number]=tDash;				//tDash is the number of proxies in Ti 
-        	// cout<<"value of Nu["<<u->post_order_number<<"]= "<<Nu[u->post_order_number]<<" and tDash= "<<tDash<<endl;
+            // cout<<"x= "<<x<<" y= "<<y<<endl;
+            // cout<<"Tut of "<<i<<" subtree is included in Tut of "<<u->post_order_number<<endl;
+            // cout<<"x= "<<x<<" y= "<<y<<endl;
+            y=x; 
+            Nu[u->post_order_number] = i;               //i is Nu,1 for u
+            Cu[u->post_order_number]=tDash;             //tDash is the number of proxies in Ti 
+            // cout<<"value of Nu["<<u->post_order_number<<"]= "<<Nu[u->post_order_number]<<" and tDash= "<<tDash<<endl;
         }
 
     }
@@ -489,9 +489,8 @@ int T_u_t(int t, Node* u)
 
 // }
 
-int Luvt(int t, Node* v, Node* u){
-    //negative case
-    // cout<<"t recieved for Luvt = "<<t<<endl;
+int Luvt_2(int t, Node* v, Node* u)
+{
     // cout<<"value of mu-u = "<<nodes_list[nodes_mv_list[v->pre_order_number]]->post_order_number - nodes_list[nodes_mv_list[u->pre_order_number]]->post_order_number<<endl;
     if(t<0)
     return 0;
@@ -501,11 +500,12 @@ int Luvt(int t, Node* v, Node* u){
 
     //base case
     if(t==0){
-    	// cout<<"returned Luv0"<<endl;
+        // cout<<"returned Luv0"<<endl;
         return Luv0(u, v);
     }
     int mu = nodes_list[nodes_mv_list[u->pre_order_number]]->post_order_number;
     int mv = nodes_list[nodes_mv_list[v->pre_order_number]]->post_order_number;
+    int mvprime=obj_vec[v->post_order_number-1]->mv_prime->post_order_number;
     int net_min =MAX_SIZE;
     int x1=v->post_order_number;
     int t2=t-1;
@@ -537,19 +537,21 @@ int Luvt(int t, Node* v, Node* u){
 
             if(a<min)  
             { 
-            	t2=i;
-            	min= a;
+                t2=i;
+                min= a;
             }
         }
         if(min<net_min) 
-        	{
-        		x1=x;
-        		XUVt[v->post_order_number][t]=x;
-        		// cout<<"			XUVt["<<v->post_order_number<<"]["<<t<<"]= "<<XUVt[v->post_order_number][t]<<endl;
-        		CUVt[v->post_order_number][t]=t2;
-        		net_min = min;
-        	}
+            {
+                x1=x;
+                XUVt[v->post_order_number][t]=x;
+                // cout<<"   IN LUVT_2  SET XUVt["<<v->post_order_number<<"]["<<t<<"]= "<<XUVt[v->post_order_number][t]<<endl;
+                // cout<<"          XUVt["<<v->post_order_number<<"]["<<t<<"]= "<<XUVt[v->post_order_number][t]<<endl;
+                CUVt[v->post_order_number][t]=t2;
+                net_min = min;
+            }
     }
+     // cout<<"AUVT= "<<A_uvt(u,v,t)<<endl;
     // cout<<"happy"<<endl;
     if(net_min != MAX_SIZE)
     return net_min;
@@ -557,32 +559,148 @@ int Luvt(int t, Node* v, Node* u){
     return 0;
 }
 
-// int A_uvt(Node* u, Node* v, int t){
 
-//     int post_v = v->post_order_number;
-//     int MvPrimeOfvNum = obj_vec[post_v -1]->mv_prime->post_order_number;
-//     int a = Luvt(t, obj_vec[post_v -1]->mv_prime, u);
+int A_uvt(Node* u, Node* v, int t){
 
-//     if(RUV1[MvPrimeOfvNum] == 0)
-//     a = a + Ruv1(u, obj_vec[post_v -1]->mv_prime);
-//     else a = a + RUV1[MvPrimeOfvNum];
 
-//     if(TUV0[MvPrimeOfvNum] == 0)
-//     a = a + T_uv_Zero(u, obj_vec[post_v -1]->mv_prime);
-//     else a = a + TUV0[MvPrimeOfvNum];
+    if(t<0)
+    return 0;
 
-//     if(RUV1[v->post_order_number] == 0)
-//     a = a - Ruv1(u, v);
-//     else a = a - RUV1[v->post_order_number];
+    if(t>(nodes_list[nodes_mv_list[v->pre_order_number]]->post_order_number - nodes_list[nodes_mv_list[u->pre_order_number]]->post_order_number))
+        return 0;
 
-//     if(TUV0[v->post_order_number] == 0)
-//     a = a - T_uv_Zero(u, v);
-//     else a = a - TUV0[v->post_order_number];
+    //base case
+    if(t==0){
+        // cout<<"returned Luv0"<<endl;
+        return Luv0(u, v);
+    }
+    int post_v = v->post_order_number;
+    int MvPrimeOfvNum = obj_vec[post_v -1]->mv_prime->post_order_number;
+    int a = Luvt_2(t, obj_vec[post_v -1]->mv_prime, u);
 
-//     return a;
+    if(RUV1[MvPrimeOfvNum] == 0)
+    a = a + Ruv1(u, obj_vec[post_v -1]->mv_prime);
+    else a = a + RUV1[MvPrimeOfvNum];
 
-// }
+    if(TUV0[MvPrimeOfvNum] == 0)
+    a = a + T_uv_Zero(u, obj_vec[post_v -1]->mv_prime);
+    else a = a + TUV0[MvPrimeOfvNum];
 
+    if(RUV1[v->post_order_number] == 0)
+    a = a - Ruv1(u, v);
+    else a = a - RUV1[v->post_order_number];
+
+    if(TUV0[v->post_order_number] == 0)
+    a = a - T_uv_Zero(u, v);
+    else a = a - TUV0[v->post_order_number];
+
+    XUVt[v->post_order_number][t]=XUVt[post_v-1][t];
+    // // cout<<"           XUVt["<<v->post_order_number<<"]["<<t<<"]= "<<XUVt[v->post_order_number][t]<<endl;
+    CUVt[v->post_order_number][t]=CUVt[post_v-1][t];
+    return a;
+
+}
+
+int Buvt(int t, Node* v, Node* u){
+    //negative case
+    // cout<<"t recieved for Luvt = "<<t<<endl;
+    // cout<<"value of mu-u = "<<nodes_list[nodes_mv_list[v->pre_order_number]]->post_order_number - nodes_list[nodes_mv_list[u->pre_order_number]]->post_order_number<<endl;
+    if(t<0)
+    return 0;
+
+    if(t>(nodes_list[nodes_mv_list[v->pre_order_number]]->post_order_number - nodes_list[nodes_mv_list[u->pre_order_number]]->post_order_number))
+        return 0;
+
+    //base case
+    if(t==0){
+        // cout<<"returned Luv0"<<endl;
+        return Luv0(u, v);
+    }
+    int mu = nodes_list[nodes_mv_list[u->pre_order_number]]->post_order_number;
+    int mv = nodes_list[nodes_mv_list[v->pre_order_number]]->post_order_number;
+    int mvprime=obj_vec[v->post_order_number-1]->mv_prime->post_order_number;
+    int net_min =MAX_SIZE;
+    int x1=v->post_order_number;
+    int t2=t-1;
+    // cout<<"for v="<<v->post_order_number<<" mvprime= "<<mvprime<<endl;
+    for(int x = mvprime; x < mv; x++){
+        int min = MAX_SIZE;
+        for(int i=maximum(1, t-LuvSize(u->post_order_number, x)); i<=minimum(t, tree_size(x)); i++){
+            Node* ex = obj_vec[x-1]->node;
+            int a = 0;
+
+            //if(TUt[x][i] == -1)
+            a = T_u_t(i, ex);
+            //else a = TUt[x][i];
+
+            if(LUVt[x][t-i] == 0)
+            a = a + Luvt_2(t-i, ex, u);
+            else a = a + (LUVt[x][t-i]);
+            
+            if(RUV1[x]== 0)
+            a = a + Ruv1(u, ex);
+            else a = a + RUV1[x];
+
+            if(RUV1[v->post_order_number] == 0)
+            a = a - Ruv1(u, v);
+            else a = a - RUV1[v->post_order_number];
+
+            if(TUV0[v->post_order_number] == 0)
+            a = a - T_uv_Zero(u, v);
+            else a = a - TUV0[v->post_order_number];
+
+            if(a<min)  
+            { 
+                t2=i;
+                min= a;
+            }
+        }
+        if(min<net_min) 
+            {
+                x1=x;
+                XUVt[v->post_order_number][t]=x;
+                // cout<<"      SET XUVt["<<v->post_order_number<<"]["<<t<<"]= "<<XUVt[v->post_order_number][t]<<endl;
+                CUVt[v->post_order_number][t]=t2;
+                net_min = min;
+            }
+    }
+     // cout<<"AUVT= "<<A_uvt(u,v,t)<<endl;
+    // cout<<"happy"<<endl;
+    if(net_min != MAX_SIZE)
+    return net_min;
+    // cout<<"see"<<endl;
+    return 0;
+}
+
+
+int Luvt(int t, Node* v, Node* u)
+{
+    int mu=obj_vec[u->post_order_number-1]->mv->post_order_number;
+    int mv=obj_vec[v->post_order_number-1]->mv->post_order_number;
+    // cout<<"for u="<<u->post_order_number<<" and v= "<<v->post_order_number<<" A_uvt= "<<A_uvt(u,v,t)<<" Buvt= "<<Buvt(t,v,u)<<" Luvt2= "<<Luvt_2(t,v,u)<<endl;
+        // cout<<"for u="<<u->post_order_number<<" and v= "<<v->post_order_number<<" A_uvt= "<<A_uvt(u,v,t)<<" Buvt= "<<Buvt(t,v,u)<<endl;
+
+    if(mv== mu){
+         // cout<<"For u="<<u->post_order_number<<" and v= "<<v->post_order_number<<" Buvt selected"<<endl;
+        return 0;
+       
+    }
+    else{
+        // if(min(A_uvt(u,v,t), Buvt(t,v,u)) == A_uvt(u,v,t))
+            // cout<<"For u="<<u->post_order_number<<" and v= "<<v->post_order_number<<" Auvt selected"<<endl;
+        // else
+            // cout<<"For u="<<u->post_order_number<<" and v= "<<v->post_order_number<<" Buvt selected"<<endl;
+        int a=A_uvt(u,v,t);
+        int b=Buvt(t,v,u);
+        int x=min(a,b);
+        // cout<<"x= "<<x<<" a= "<<a<<" b= "<<b<<endl;
+        if(x==a )
+            A_uvt(u,v,t);
+        else 
+            Buvt(t,v,u);
+        return min(A_uvt(u,v,t), Buvt(t,v,u));
+    }
+}
 // int B_uvt(Node* u, Node* v, int t){
 //     cout<<"BUVT called"<<endl;
 //     cout<<"mv num: "<<nodes_list[nodes_mv_list[v->pre_order_number]]->post_order_number<<endl;
@@ -653,7 +771,7 @@ void Proxies(Node* u, int t)
     //here u is a node.
     // if(u->post_order_number==obj_vec.size() && t<1)
     // {
-    // 	return;
+    //  return;
     // }
     if(t==1)
     {
@@ -662,13 +780,13 @@ void Proxies(Node* u, int t)
         // proxyList.push_back(u->post_order_number);
         // NuList.push_back(u->post_order_number);
         // NuList.push(u->post_order_number);
-    	// CuList.push_back(t);
-    	proxyList.push_back(u->post_order_number);
-    	// proxyL.push_back(u->post_order_number);
-    	proxyL.insert(u->post_order_number);
-    	// cout<<"u becomes proxy"<<endl;
-    	// if(u->post_order_number!=obj_vec.size())
-    	// NuList.push_back(u->post_order_number);
+        // CuList.push_back(t);
+        proxyList.push_back(u->post_order_number);
+        // // proxyL.push_back(u->post_order_number);
+        proxyL.insert(u->post_order_number);
+        cout<<"u becomes proxy"<<endl;
+        // if(u->post_order_number!=obj_vec.size())
+        // NuList.push_back(u->post_order_number);
         return;
     }
     // proxyList.push_back(u->post_order_number);
@@ -676,16 +794,16 @@ void Proxies(Node* u, int t)
     //compute ||Tv1||, ||Tuv0||, ||Ruv1|| and ||Luv0||.
     // if(t>=tree_size(u))
     // {
-    // 	int j=tree_size(u)-1;
-    // 	for(int i=(u->mv)->post_order_number;i<u;i++)
-    // 	{
-    		
-    // 		proxyList.push_back(i);
-    // 		NuList.push_back(i);
-    // 		CuList.push_back(j);
+    //  int j=tree_size(u)-1;
+    //  for(int i=(u->mv)->post_order_number;i<u;i++)
+    //  {
+            
+    //      proxyList.push_back(i);
+    //      NuList.push_back(i);
+    //      CuList.push_back(j);
 
-    // 		j--;
-    // 	}
+    //      j--;
+    //  }
     // }
     
     int mu_num = obj_vec[u->post_order_number-1]->mv->post_order_number;      //mv = post order no of Mv of u
@@ -712,41 +830,41 @@ void Proxies(Node* u, int t)
     // cout<<"A"<<endl;
     // for(int i=1;i<=tree_size(u->post_order_number)-1;i++)
     // {
-    // 	for(int j=1;j<t;j++)
-    // 	{
-    // 		cout<<"XUVt["<<i<<"]["<<j<<"]= "<<XUVt[i][j]<<"  CUVt["<<i<<"]["<<j<<"]= "<<CUVt[i][j]<<endl;
-    // 	}
+    //  for(int j=1;j<t;j++)
+    //  {
+    //      cout<<"XUVt["<<i<<"]["<<j<<"]= "<<XUVt[i][j]<<"  CUVt["<<i<<"]["<<j<<"]= "<<CUVt[i][j]<<endl;
+    //  }
     // }
     // cout<<"v_num = "<<mu_num + 1<<" to "<<u->post_order_number-1<<endl;
     // L4ForPhaseOne(u->post_order_number, t);
 
-    for(int t1=2;t1<=t;t1++)			//FIXME check when t<tree_size(x) or mu<=mv
+    for(int t1=2;t1<=t;t1++)            //FIXME check when t<tree_size(x) or mu<=mv
     {
-    	for(int v_num = mu_num + 1; v_num < u->post_order_number; v_num++)
-    	{	
+        for(int v_num = mu_num + 1; v_num < u->post_order_number; v_num++)
+        {   
 
-    		if(v_num == obj_vec[v_num-1]->mv->post_order_number)
-    		{
-    			
-    			LUVt[v_num][t1-1] = Luvt(t1-1, obj_vec[v_num-1]->node, obj_vec[u->post_order_number -1]->node);
-    			// cout<<"v_num = "<<v_num<<" mv= "<<obj_vec[v_num-1]->mv->post_order_number<<" LuvT= "<<LUVt[v_num][t1-1]<<endl;
-    			// cout<<"Luv called for u= "<<u->post_order_number<<" v= "<<v_num<<" t= "<<t1-1<<" with Luvt= "<<LUVt[v_num][t1-1]<<endl;
-    		}
-    	}
+            if(v_num == obj_vec[v_num-1]->mv->post_order_number)
+            {
+                
+                LUVt[v_num][t1-1] = Luvt(t1-1, obj_vec[v_num-1]->node, obj_vec[u->post_order_number -1]->node);
+                // cout<<"v_num = "<<v_num<<" mv= "<<obj_vec[v_num-1]->mv->post_order_number<<" LuvT= "<<LUVt[v_num][t1-1]<<endl;
+                // cout<<"Luv called for u= "<<u->post_order_number<<" v= "<<v_num<<" t= "<<t1-1<<" with Luvt= "<<LUVt[v_num][t1-1]<<endl;
+            }
+        }
     }
 
-    // for(int i=1;i<=tree_size(u->post_order_number)-1;i++)
-    // {
-    // 	for(int j=1;j<t;j++)
-    // 	{
-    // 		cout<<"XUVt["<<i<<"]["<<j<<"]= "<<XUVt[i][j]<<"  CUVt["<<i<<"]["<<j<<"]= "<<CUVt[i][j]<<endl;
-    // 	}
-    // }
+    for(int i=1;i<=tree_size(u->post_order_number)-1;i++)
+    {
+        for(int j=1;j<t;j++)
+        {
+            cout<<"XUVt["<<i<<"]["<<j<<"]= "<<XUVt[i][j]<<"  CUVt["<<i<<"]["<<j<<"]= "<<CUVt[i][j]<<endl;
+        }
+    }
 
     int nu1=Nu[u->post_order_number];
     int cu1=Cu[u->post_order_number];
     // cout<<"Nu= "<<nu1<<" Cu= "<<cu1<<" t= "<<t<<endl;
-    // cout<<nu1<<" pushed into NuList"<<endl;
+    cout<<nu1<<" pushed into NuList and proxyList"<<endl;
     NuList.push_back(nu1);
     CuList.push_back(cu1);
     proxyList.push_back(nu1);
@@ -764,27 +882,27 @@ void Proxies(Node* u, int t)
     // cout<<"CUVt[nuBefore][tTemp];= "<<CUVt[nuBefore][tTemp]<<endl;
     while(tTemp>0)
     {
-    	int nui=XUVt[nuBefore][tTemp];
-    	int cui=CUVt[nuBefore][tTemp];
-    	    	// cout<<"cui= "<<cui<<" nui= "<<nui<<endl;
-    	if(cui!=0 && nui!=0)			//i.e. we are at the leftmost node for proxies
-    	{
-	    	
-	    	// cout<<nui<<" pushed into NuList"<<endl;
-	    	NuList.push_back(nui);
-	    	CuList.push_back(cui);
-	    	proxyList.push_back(nui);
-	    	proxyL.insert(nui);
-	    	nuBefore=nui;
-	    	tTemp=tTemp-cui;
-    	iTemp++;
+        int nui=XUVt[nuBefore][tTemp];
+        int cui=CUVt[nuBefore][tTemp];
+                // cout<<"cui= "<<cui<<" nui= "<<nui<<endl;
+        if(cui!=0 && nui!=0)            //i.e. we are at the leftmost node for proxies
+        {
+            
+            cout<<nui<<" pushed into NuList and proxyList"<<endl;
+            NuList.push_back(nui);
+            CuList.push_back(cui);
+            proxyList.push_back(nui);
+            proxyL.insert(nui);
+            nuBefore=nui;
+            tTemp=tTemp-cui;
+        iTemp++;
 
-	    	// cout<<"			last element added to NuList is "<<nui<<endl;
-	    	// cout<<"			last element added to CuList is "<<CuList[CuList.size()-1]<<endl;
-			// cout<<"After while loop tTemp= "<<tTemp<<" iTemp= "<<iTemp<<endl;
-		}
-		else
-		break; 
+            // cout<<"          last element added to NuList is "<<nui<<endl;
+            // cout<<"          last element added to CuList is "<<CuList[CuList.size()-1]<<endl;
+            // cout<<"After while loop tTemp= "<<tTemp<<" iTemp= "<<iTemp<<endl;
+        }
+        else
+        break; 
     }
 
     // cout<<"tTemp= "<<tTemp<<" iTemp= "<<iTemp<<endl;
@@ -794,20 +912,20 @@ void Proxies(Node* u, int t)
     
 // Proxies(obj_vec[NuList[0]]->node, CuList[0]);
     // int initSizeOfNuList=NuList.size();
-    // if(iTemp<=2)							//i.e. no element is added in nulist
-    	// initSizeOfNuList=initSizeOfNuList-1;
+    // if(iTemp<=2)                         //i.e. no element is added in nulist
+        // initSizeOfNuList=initSizeOfNuList-1;
     
 //     for(int i=initSizeOfNuList-1;i<iTemp-1;i++)
 //     {
-//     	cout<<"i= "<<i<<endl;
-//     	cout<<"going to call proxies for node : "<<NuList[i]<<" with Cu= "<<CuList[i]<<endl;
-//     	Proxies(obj_vec[NuList[i]-1]->node, CuList[i]);
-//     	cout<<"NuList size = "<<NuList.size()<<" NuList[0]= "<<NuList[0]<<endl;
+//      cout<<"i= "<<i<<endl;
+//      cout<<"going to call proxies for node : "<<NuList[i]<<" with Cu= "<<CuList[i]<<endl;
+//      Proxies(obj_vec[NuList[i]-1]->node, CuList[i]);
+//      cout<<"NuList size = "<<NuList.size()<<" NuList[0]= "<<NuList[0]<<endl;
 //         // cout<<"proxyList size= "<<proxyList.size()<<" proxyList[0]= "<<proxyList[0]<<endl;
 
 //         for(int j=0;j<NuList.size();j++)
 //         {
-//         	cout<<"				NuList["<<j<<"]= "<<NuList[j]<<endl;
+//          cout<<"             NuList["<<j<<"]= "<<NuList[j]<<endl;
 //         }
 //     }
 //     cout<<"AFTER CALLING PROXIES FOR EVERY NODES OF NuList WE HAVE: "<<endl;
@@ -815,7 +933,7 @@ void Proxies(Node* u, int t)
 // cout<<"vfsklnkldg"<<endl;
     // for(int i1=0;i1<proxyList.size();i1++)
     // {
-    // 	cout<<"proxyList["<<i1<<"]= "<<proxyList[i1]<<endl;
+    //  cout<<"proxyList["<<i1<<"]= "<<proxyList[i1]<<endl;
     // }
     // for(int v_num = mu_num + 1; v_num < u->post_order_number; v_num++)
     // {   cout<<"C"<<endl;
@@ -938,8 +1056,8 @@ void INITIALIZATION(int u_post_order_num){
     }
     for(int i = mu_num; i <= u_post_order_num; i++)
     {
-    	// cout<<"T"<<i<<"1= "<<TV1[i]<<endl; 
-    	Tut[i][1]=TV1[i];
+        // cout<<"T"<<i<<"1= "<<TV1[i]<<endl; 
+        Tut[i][1]=TV1[i];
     }
 }
 
@@ -948,9 +1066,9 @@ void L4ForPhaseOne(int u_post_order_num, int k){
     for(int t=2; t<=k; t++){
         for(int v_num = mu_num + 1; v_num < u_post_order_num; v_num++){
             if(v_num == obj_vec[v_num-1]->mv->post_order_number){
-            	
+                
                 LUVt[v_num][t-1] = Luvt(t-1, obj_vec[v_num-1]->node, obj_vec[u_post_order_num -1]->node);
-            	// cout<<"Luv called for u= "<<u_post_order_num<<" v= "<<v_num<<" t= "<<t-1<<" with Luvt= "<<LUVt[v_num][t-1]<<endl;
+                // cout<<"Luv called for u= "<<u_post_order_num<<" v= "<<v_num<<" t= "<<t-1<<" with Luvt= "<<LUVt[v_num][t-1]<<endl;
             }
         }
 
@@ -1154,22 +1272,22 @@ int main(int argc, char* argv[])                                // argc?????????
 // cout<<"asdf"<<endl;
         store_mv_prime_in_Object();
         // display_MV_and_MV_prime();
-
+        cout<<"obj_vec.size()= "<<obj_vec.size()<<endl;
 // cout<<"asdf"<<endl;
 // cout<<"asdf"<<endl;
         // display_obj_list();
-        if(k>=obj_vec.size()){
+//         if(k>=obj_vec.size()){
 
-	        for(int i=0;i<obj_vec.size();i++)
-	        {
-	        	if(i!=obj_vec.size()-1)
-	        	cout<<nodes_list[i]->pre_order_number<<" ";
-	        	else 
-	        		cout<<nodes_list[i]->pre_order_number<<endl;
-	        }
-	        cout<<"Total cost: "<<0<<endl;
-	        return 0;
-    	}
+//          for(int i=0;i<obj_vec.size();i++)
+//          {
+//              if(i!=obj_vec.size()-1)
+//              cout<<nodes_list[i]->pre_order_number<<" ";
+//              else 
+//                  cout<<nodes_list[i]->pre_order_number<<endl;
+//          }
+//          cout<<"Total cost: "<<0<<endl;
+//          return 0;
+//      }
 
 // cout<<"asdf"<<endl;
         int n = obj_vec.size();
@@ -1182,161 +1300,161 @@ int main(int argc, char* argv[])                                // argc?????????
         }
 
         
-            // check_Tv1();
-        // check_Luvv0();
-         // check_Tuvv0();
+//             // check_Tv1();
+//         // check_Luvv0();
+//          // check_Tuvv0();
         
 
-        // for(int i=1; i<= n; i++){
-        //     for(int j=1; j<=k; j++){
-        //         cout<<"||T u||t for u="<<i<<" and t= "<<j<<": "<<Tut[i][j]<<endl;
-        //     }
-        // }
+//         // for(int i=1; i<= n; i++){
+//         //     for(int j=1; j<=k; j++){
+//         //         cout<<"||T u||t for u="<<i<<" and t= "<<j<<": "<<Tut[i][j]<<endl;
+//         //     }
+//         // }
 
-        // for(int i =0;i<obj_vec.size();i++)
-        // {
-        // 	// if(Cu[i]!=0)
-        // 	// cout<<obj_vec[i]->post_orde<<"]= "<<Cu[i]<<endl;
-        // 	cout<<(obj_vec[i])->post_order_number<<endl;
-        // }
-        // for(int i =0;i<obj_vec.size();i++)
-        // {
-        // 	if(Nu[i]!=0)
-        // 	cout<<"Nu["<<i<<"]= "<<Nu[i]<<endl;
-        // }
+//         // for(int i =0;i<obj_vec.size();i++)
+//         // {
+//         //   // if(Cu[i]!=0)
+//         //   // cout<<obj_vec[i]->post_orde<<"]= "<<Cu[i]<<endl;
+//         //   cout<<(obj_vec[i])->post_order_number<<endl;
+//         // }
+//         // for(int i =0;i<obj_vec.size();i++)
+//         // {
+//         //   if(Nu[i]!=0)
+//         //   cout<<"Nu["<<i<<"]= "<<Nu[i]<<endl;
+//         // }
 
         
-        /*PHASE 2*/
-        //init();
-        //display_Cu();
-        //display_Nu();.
+//         /*PHASE 2*/
+//         //init();
+//         //display_Cu();
+//         //display_Nu();.
 
-        // cout<<"here comes phase2\n";
+//         // cout<<"here comes phase2\n";
 
-            //display();
-    // for(int i1 = obj_vec[n-1]->mv->post_order_number; i1 < obj_vec[n-1]->node->post_order_number; i1++){
-    //     for(int j1=1; j1 <= k; j1++){
-    //         if(LUVt[i1][j1] == -1)
-    //         int c = B_uvt(obj_vec[n-1]->node, obj_vec[i1-1]->node, j1);
-    //     }
-    // }
-        // cout<<"yaha pe\n";
-        // B_uvt(obj_vec[n-1]->node, obj_vec[7]->node, 1);
-        //     // for(int i= 1; i<=obj_vec.size(); i++){
-        //         // for(int t=1; t<=k; t++){
-        //             Proxies(obj_vec[n-1]->node, k);
-        //         // }
-        //     // }
-        proxyList.push_back(obj_vec.size());
-        proxyL.insert(obj_vec.size());
-        Proxies(obj_vec[obj_vec.size()-1]->node, k);
+//             //display();
+//     // for(int i1 = obj_vec[n-1]->mv->post_order_number; i1 < obj_vec[n-1]->node->post_order_number; i1++){
+//     //     for(int j1=1; j1 <= k; j1++){
+//     //         if(LUVt[i1][j1] == -1)
+//     //         int c = B_uvt(obj_vec[n-1]->node, obj_vec[i1-1]->node, j1);
+//     //     }
+//     // }
+//         // cout<<"yaha pe\n";
+//         // B_uvt(obj_vec[n-1]->node, obj_vec[7]->node, 1);
+//         //     // for(int i= 1; i<=obj_vec.size(); i++){
+//         //         // for(int t=1; t<=k; t++){
+//         //             Proxies(obj_vec[n-1]->node, k);
+//         //         // }
+//         //     // }
+//         proxyList.push_back(obj_vec.size());
+//         proxyL.insert(obj_vec.size());
+//         Proxies(obj_vec[obj_vec.size()-1]->node, k);
         
-        for(int i=0;i<NuList.size();i++)
-        {
+//         for(int i=0;i<NuList.size();i++)
+//         {
 
-        	Proxies(obj_vec[NuList[i]-1]->node, CuList[i]);
+//          Proxies(obj_vec[NuList[i]-1]->node, CuList[i]);
 
-        }
-        // for(int i=0; i<proxies.size(); i++){
-        //     cout<<"Proxy: "<<proxies[i]<<endl;
-        // }
-        // cout<<endl<<"NuList and CuList: "<<endl;
-        // int sie=NuList.size();
+//         }
+//         // for(int i=0; i<proxies.size(); i++){
+//         //     cout<<"Proxy: "<<proxies[i]<<endl;
+//         // }
+//         // cout<<endl<<"NuList and CuList: "<<endl;
+//         // int sie=NuList.size();
 
-        // cout<<NuList.size()<<" is size of NuList"<<endl;
+//         // cout<<NuList.size()<<" is size of NuList"<<endl;
 
-	// for(int i1=0;i1<NuList.size();i1++)
- //    {
- //    	cout<<"NuList["<<i1<<"]= "<<NuList[i1]<<endl;
- //    }
- //        cout<<"proxyList size= "<<proxyList.size()<<endl;
-    //     for(int i1=0;i1<proxyList.size();i1++)
-    // {
-    // 	cout<<"proxyList["<<i1<<"]= "<<proxyList[i1]<<endl;
-    // }
+//  // for(int i1=0;i1<NuList.size();i1++)
+//  //    {
+//  //      cout<<"NuList["<<i1<<"]= "<<NuList[i1]<<endl;
+//  //    }
+//  //        cout<<"proxyList size= "<<proxyList.size()<<endl;
+//     //     for(int i1=0;i1<proxyList.size();i1++)
+//     // {
+//     //   cout<<"proxyList["<<i1<<"]= "<<proxyList[i1]<<endl;
+//     // }
 
-    // cout<<"size of set= "<<proxyL.size()<<endl;
+//     // cout<<"size of set= "<<proxyL.size()<<endl;
 
-    int size1=proxyL.size();
-    vector<int> beforeFinalProxies;
-    for(int i=0;i<size1;i++)
-    {
-    	int x=*proxyL.begin();
-    	beforeFinalProxies.push_back(x);
-    	
-    	proxyL.erase(x);
+//     int size1=proxyL.size();
+//     vector<int> beforeFinalProxies;
+//     for(int i=0;i<size1;i++)
+//     {
+//      int x=*proxyL.begin();
+//      beforeFinalProxies.push_back(x);
+        
+//      proxyL.erase(x);
 
-    }
+//     }
 
-    // for(int i=0;i<beforeFinalProxies.size();i++)
-    // {
-    // 	cout<<"beforeFinalProxies["<<i<<"]= "<<beforeFinalProxies[i]<<endl;
-    // }
+//     // for(int i=0;i<beforeFinalProxies.size();i++)
+//     // {
+//     //   cout<<"beforeFinalProxies["<<i<<"]= "<<beforeFinalProxies[i]<<endl;
+//     // }
 
-    set<int> s;
-    for(int i=0;i<beforeFinalProxies.size();i++)
-    {
-    	s.insert((obj_vec[beforeFinalProxies[i]-1])->node->pre_order_number);
-    }
+//     set<int> s;
+//     for(int i=0;i<beforeFinalProxies.size();i++)
+//     {
+//      s.insert((obj_vec[beforeFinalProxies[i]-1])->node->pre_order_number);
+//     }
 
 
 
-	int size2=s.size();
-    vector<int> finalProxies;
-    for(int i=0;i<size2;i++)
-    {
-    	int x=*s.begin();
-    	finalProxies.push_back(x);
-    	
-    	s.erase(x);
+//  int size2=s.size();
+//     vector<int> finalProxies;
+//     for(int i=0;i<size2;i++)
+//     {
+//      int x=*s.begin();
+//      finalProxies.push_back(x);
+        
+//      s.erase(x);
 
-    }
-    cout<<"Proxies: "<<endl;
-    for(int i=0;i<finalProxies.size();i++)
-    {
-    	if(i!=finalProxies.size()-1)
-    		cout<<finalProxies[i]<<" ";
-    	else 
-    		cout<<finalProxies[i]<<endl;
-    }
+//     }
+//     cout<<"Proxies: "<<endl;
+//     for(int i=0;i<finalProxies.size();i++)
+//     {
+//      if(i!=finalProxies.size()-1)
+//          cout<<finalProxies[i]<<" ";
+//      else 
+//          cout<<finalProxies[i]<<endl;
+//     }
 
-    cout<<"Total cost: "<<Tut[obj_vec.size()][k]<<endl;
-    // cout<<"afadf"<<endl;
-        // int i1=0;
-        // while(NuList.size()>0)
-        // {
-        // 	int n=NuList.front();
-        	
+//     cout<<"Total cost: "<<Tut[obj_vec.size()][k]<<endl;
+//     // cout<<"afadf"<<endl;
+//         // int i1=0;
+//         // while(NuList.size()>0)
+//         // {
+//         //   int n=NuList.front();
+            
 
-        // 	NuList.pop();
-        // 	int t3=CuList[i1];
-        // 	i1++;
-        // 	cout<<"n= "<<n<<" popped from NuList T3="<<t3<<" n= "<<n<<" obj_vec.size()= "<<obj_vec.size()<<endl;
-        // 	cout<<"k= "<<k<<endl;
-        // 	if(n==obj_vec.size())
-        // 	{
+//         //   NuList.pop();
+//         //   int t3=CuList[i1];
+//         //   i1++;
+//         //   cout<<"n= "<<n<<" popped from NuList T3="<<t3<<" n= "<<n<<" obj_vec.size()= "<<obj_vec.size()<<endl;
+//         //   cout<<"k= "<<k<<endl;
+//         //   if(n==obj_vec.size())
+//         //   {
 
-        // 		cout<<"root popped"<<endl;
-        // 		break;
-        // 	}
-        	
-        // 	if(k-1==t3)
-        // 	{
-        // 		cout<<"t3=1 left"<<endl;
-        // 		proxyList.push_back(n);
-        // 		break;
-        // 	}
-        // 	else{
-        		
-        // 		cout<<"proxies called for "<<obj_vec[n-1]->node->post_order_number<<endl;
-        // 	proxyList.push_back(n);
-        // 	Proxies(obj_vec[n-1]->node, t3);
+//         //       cout<<"root popped"<<endl;
+//         //       break;
+//         //   }
+            
+//         //   if(k-1==t3)
+//         //   {
+//         //       cout<<"t3=1 left"<<endl;
+//         //       proxyList.push_back(n);
+//         //       break;
+//         //   }
+//         //   else{
+                
+//         //       cout<<"proxies called for "<<obj_vec[n-1]->node->post_order_number<<endl;
+//         //   proxyList.push_back(n);
+//         //   Proxies(obj_vec[n-1]->node, t3);
 
-        // 	cout<<"NuList size = "<<NuList.size()<<" with front = "<<NuList.front()<<endl;
+//         //   cout<<"NuList size = "<<NuList.size()<<" with front = "<<NuList.front()<<endl;
 
-        // 	break;
-        // 	}
-        // }
+//         //   break;
+//         //   }
+//         // }
          
 
 
