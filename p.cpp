@@ -678,7 +678,7 @@ int Luvt(int t, Node* v, Node* u)
     int mu=obj_vec[u->post_order_number-1]->mv->post_order_number;
     int mv=obj_vec[v->post_order_number-1]->mv->post_order_number;
     // cout<<"for u="<<u->post_order_number<<" and v= "<<v->post_order_number<<" A_uvt= "<<A_uvt(u,v,t)<<" Buvt= "<<Buvt(t,v,u)<<" Luvt2= "<<Luvt_2(t,v,u)<<endl;
-        // cout<<"for u="<<u->post_order_number<<" and v= "<<v->post_order_number<<" A_uvt= "<<A_uvt(u,v,t)<<" Buvt= "<<Buvt(t,v,u)<<endl;
+        // cout<<"for u="<<u->post_order_number<<" and v= "<<v->post_order_number<<" t= "<<t<<" A_uvt= "<<A_uvt(u,v,t)<<" Buvt= "<<Buvt(t,v,u)<<endl;
 
     if(mv== mu){
          // cout<<"For u="<<u->post_order_number<<" and v= "<<v->post_order_number<<" Buvt selected"<<endl;
@@ -693,12 +693,14 @@ int Luvt(int t, Node* v, Node* u)
         int a=A_uvt(u,v,t);
         int b=Buvt(t,v,u);
         int x=min(a,b);
-        // cout<<"x= "<<x<<" a= "<<a<<" b= "<<b<<endl;
+        // cout<<"             x= "<<x<<" a= "<<a<<" b= "<<b<<endl;
         if(x==a )
             A_uvt(u,v,t);
-        else 
+        else {
             Buvt(t,v,u);
-        return min(A_uvt(u,v,t), Buvt(t,v,u));
+
+        }
+        return min(a,b);
     }
 }
 // int B_uvt(Node* u, Node* v, int t){
@@ -765,224 +767,85 @@ int Luvt(int t, Node* v, Node* u)
 // }
 
 
-void Proxies(Node* u, int t)
-{
-    //L1: If t = 1 then return {u};
-    //here u is a node.
-    // if(u->post_order_number==obj_vec.size() && t<1)
-    // {
-    //  return;
-    // }
-    if(t==1)
-    {
-        // cout<<"here u is: "<<u->post_order_number<<endl;
-        //nodes_array[u->post_order_number] = u->post_order_number;
-        // proxyList.push_back(u->post_order_number);
-        // NuList.push_back(u->post_order_number);
-        // NuList.push(u->post_order_number);
-        // CuList.push_back(t);
-        proxyList.push_back(u->post_order_number);
-        // // proxyL.push_back(u->post_order_number);
-        proxyL.insert(u->post_order_number);
-        cout<<"u becomes proxy"<<endl;
-        // if(u->post_order_number!=obj_vec.size())
-        // NuList.push_back(u->post_order_number);
-        return;
+
+void INITIALIZATION(int u_post_order_num){
+    int mu_num = obj_vec[u_post_order_num - 1]->mv->post_order_number;
+    for(int i = mu_num; i <= u_post_order_num; i++){
+        TV1[i] = Tv1(obj_vec[i-1]->node);
+        TUV0[i] = T_uv_Zero(obj_vec[u_post_order_num - 1]->node, obj_vec[i - 1]->node);
+        RUV1[i] = Ruv1(obj_vec[u_post_order_num - 1]->node, obj_vec[i - 1]->node);
+        LUV0[i] = Luv0(obj_vec[u_post_order_num - 1]->node, obj_vec[i - 1]->node);
     }
-    // proxyList.push_back(u->post_order_number);
-    //L2: Initialization: For each v belongs to Tu, 
-    //compute ||Tv1||, ||Tuv0||, ||Ruv1|| and ||Luv0||.
-    // if(t>=tree_size(u))
-    // {
-    //  int j=tree_size(u)-1;
-    //  for(int i=(u->mv)->post_order_number;i<u;i++)
-    //  {
-            
-    //      proxyList.push_back(i);
-    //      NuList.push_back(i);
-    //      CuList.push_back(j);
-
-    //      j--;
-    //  }
-    // }
-    
-    int mu_num = obj_vec[u->post_order_number-1]->mv->post_order_number;      //mv = post order no of Mv of u
-    
-    INITIALIZATION(u->post_order_number);
-    /*
-    int sizeOfTreeU = u->post_order_number - mu_num + 1;
-    int tv1[sizeOfTreeU], tuv0[sizeOfTreeU], ruv1[sizeOfTreeU];
-    int luv0[sizeOfTreeU];
-    
-
-    for(int v_num = mu_num; v_num <= u->post_order_number; v_num++)
-    {   
-        cout<<"number: "<<v_num<<endl;
-        tv1[v_num]  = Tv1(obj_vec[u->post_order_number-1]->node);
-        tuv0[v_num] = T_uv_Zero(u, obj_vec[v_num-1]->node);
-        ruv1[v_num] = Ruv1(u, obj_vec[v_num-1]->node);
-        luv0[v_num] = Luv0(u, obj_vec[v_num-1]->node);
-        cout<<"tv1: "<<tv1[v_num]<<" tuv0: "<<tuv0[v_num]<<" ruv1: "<<ruv1[v_num]<<" luv0: "<<luv0[v_num]<<endl<<endl;
-    }
-    */
-    //int xuv_t[ARR_SIZE], cuv_t[ARR_SIZE];   //cuv_t_minus_one is the number of proxies in the tree rotted at
-    //int luv_t_minus_one[ARR_SIZE];
-    // cout<<"A"<<endl;
-    // for(int i=1;i<=tree_size(u->post_order_number)-1;i++)
-    // {
-    //  for(int j=1;j<t;j++)
-    //  {
-    //      cout<<"XUVt["<<i<<"]["<<j<<"]= "<<XUVt[i][j]<<"  CUVt["<<i<<"]["<<j<<"]= "<<CUVt[i][j]<<endl;
-    //  }
-    // }
-    // cout<<"v_num = "<<mu_num + 1<<" to "<<u->post_order_number-1<<endl;
-    // L4ForPhaseOne(u->post_order_number, t);
-
-    for(int t1=2;t1<=t;t1++)            //FIXME check when t<tree_size(x) or mu<=mv
+    for(int i = mu_num; i <= u_post_order_num; i++)
     {
-        for(int v_num = mu_num + 1; v_num < u->post_order_number; v_num++)
-        {   
+        // cout<<"T"<<i<<"1= "<<TV1[i]<<endl; 
+        Tut[i][1]=TV1[i];
+    }
+}
 
-            if(v_num == obj_vec[v_num-1]->mv->post_order_number)
-            {
+void L4ForPhaseOne(int u_post_order_num, int k){
+    int mu_num = obj_vec[u_post_order_num -1]->mv->post_order_number;
+    for(int t=2; t<=k; t++){
+        for(int v_num = mu_num + 1; v_num < u_post_order_num; v_num++){
+            if(v_num == obj_vec[v_num-1]->mv->post_order_number){
                 
-                LUVt[v_num][t1-1] = Luvt(t1-1, obj_vec[v_num-1]->node, obj_vec[u->post_order_number -1]->node);
-                // cout<<"v_num = "<<v_num<<" mv= "<<obj_vec[v_num-1]->mv->post_order_number<<" LuvT= "<<LUVt[v_num][t1-1]<<endl;
-                // cout<<"Luv called for u= "<<u->post_order_number<<" v= "<<v_num<<" t= "<<t1-1<<" with Luvt= "<<LUVt[v_num][t1-1]<<endl;
+                LUVt[v_num][t-1] = Luvt(t-1, obj_vec[v_num-1]->node, obj_vec[u_post_order_num -1]->node);
+                // cout<<"Luv called for u= "<<u_post_order_num<<" v= "<<v_num<<" t= "<<t-1<<" with Luvt= "<<LUVt[v_num][t-1]<<endl;
             }
         }
-    }
 
-    for(int i=1;i<=tree_size(u->post_order_number)-1;i++)
+        //L7..
+        // if(u_post_order_num==10)
+        // cout<<"finding Tut for node_post_order number= "<<u_post_order_num<<" and t= "<<t<<endl;
+        Tut[u_post_order_num][t] = T_u_t(t, obj_vec[u_post_order_num-1]->node);
+        // cout<<"for node u= "<<u_post_order_num<<" and t="<<t<<": Tut= "<<Tut[u_post_order_num][t]<<" Nu= "<<Nu[u_post_order_num]<<" Cu= "<<Cu[u_post_order_num]<<endl;
+        // cout<<endl;
+    }
+    // cout<<"L4 ends"<<endl;
+    // cout<<endl<<endl;
+}
+
+void
+Proxies (Node * u, int t)
+{
+  if (t == 1)
     {
-        for(int j=1;j<t;j++)
-        {
-            cout<<"XUVt["<<i<<"]["<<j<<"]= "<<XUVt[i][j]<<"  CUVt["<<i<<"]["<<j<<"]= "<<CUVt[i][j]<<endl;
-        }
+      return;
     }
+  int mu_num = obj_vec[u->post_order_number - 1]->mv->post_order_number;    //mv = post order no of Mv of u
 
-    int nu1=Nu[u->post_order_number];
-    int cu1=Cu[u->post_order_number];
-    // cout<<"Nu= "<<nu1<<" Cu= "<<cu1<<" t= "<<t<<endl;
-    cout<<nu1<<" pushed into NuList and proxyList"<<endl;
-    NuList.push_back(nu1);
-    CuList.push_back(cu1);
-    proxyList.push_back(nu1);
-    proxyL.insert(nu1);
-    int iTemp=2;
-    
+  INITIALIZATION (u->post_order_number);
+  L4ForPhaseOne(u->post_order_number, t);
 
-    // proxyList.push_back(nu1);
-    // int count=0;
-    int nuBefore=nu1;
-    int tTemp=t-cu1-1;
+  int nu1 = Nu[u->post_order_number];
+  int cu1 = Cu[u->post_order_number];
+  NuList.push_back (nu1);
+  CuList.push_back (cu1);
+  proxyList.push_back (nu1);
 
-    // cout<<"tTemp= "<<tTemp<<" nuBefore= "<<nuBefore<<endl;
-    // cout<<"XUVt[nuBefore][tTemp];= "<<XUVt[nuBefore][tTemp]<<endl;
-    // cout<<"CUVt[nuBefore][tTemp];= "<<CUVt[nuBefore][tTemp]<<endl;
-    while(tTemp>0)
+  int iTemp = 2;
+  int nuBefore = nu1;
+  int tTemp = t - cu1 - 1;
+
+  while (tTemp > 0)
     {
-        int nui=XUVt[nuBefore][tTemp];
-        int cui=CUVt[nuBefore][tTemp];
-                // cout<<"cui= "<<cui<<" nui= "<<nui<<endl;
-        if(cui!=0 && nui!=0)            //i.e. we are at the leftmost node for proxies
-        {
-            
-            cout<<nui<<" pushed into NuList and proxyList"<<endl;
-            NuList.push_back(nui);
-            CuList.push_back(cui);
-            proxyList.push_back(nui);
-            proxyL.insert(nui);
-            nuBefore=nui;
-            tTemp=tTemp-cui;
-        iTemp++;
+      int nui = XUVt[nuBefore][tTemp];
+      int cui = CUVt[nuBefore][tTemp];
+      if (cui != 0 && nui != 0) //i.e. we are at the leftmost node for proxies
+    {
 
-            // cout<<"          last element added to NuList is "<<nui<<endl;
-            // cout<<"          last element added to CuList is "<<CuList[CuList.size()-1]<<endl;
-            // cout<<"After while loop tTemp= "<<tTemp<<" iTemp= "<<iTemp<<endl;
-        }
-        else
-        break; 
+      NuList.push_back (nui);
+      CuList.push_back (cui);
+      proxyList.push_back (nui);
+      nuBefore = nui;
+      tTemp = tTemp - cui;
+      iTemp++;
+
     }
-
-    // cout<<"tTemp= "<<tTemp<<" iTemp= "<<iTemp<<endl;
-    // int iTemp2=0;
-// 
-    // cout<<"After while loop NuList becomes: "<<endl;
-    
-// Proxies(obj_vec[NuList[0]]->node, CuList[0]);
-    // int initSizeOfNuList=NuList.size();
-    // if(iTemp<=2)                         //i.e. no element is added in nulist
-        // initSizeOfNuList=initSizeOfNuList-1;
-    
-//     for(int i=initSizeOfNuList-1;i<iTemp-1;i++)
-//     {
-//      cout<<"i= "<<i<<endl;
-//      cout<<"going to call proxies for node : "<<NuList[i]<<" with Cu= "<<CuList[i]<<endl;
-//      Proxies(obj_vec[NuList[i]-1]->node, CuList[i]);
-//      cout<<"NuList size = "<<NuList.size()<<" NuList[0]= "<<NuList[0]<<endl;
-//         // cout<<"proxyList size= "<<proxyList.size()<<" proxyList[0]= "<<proxyList[0]<<endl;
-
-//         for(int j=0;j<NuList.size();j++)
-//         {
-//          cout<<"             NuList["<<j<<"]= "<<NuList[j]<<endl;
-//         }
-//     }
-//     cout<<"AFTER CALLING PROXIES FOR EVERY NODES OF NuList WE HAVE: "<<endl;
-    
-// cout<<"vfsklnkldg"<<endl;
-    // for(int i1=0;i1<proxyList.size();i1++)
-    // {
-    //  cout<<"proxyList["<<i1<<"]= "<<proxyList[i1]<<endl;
-    // }
-    // for(int v_num = mu_num + 1; v_num < u->post_order_number; v_num++)
-    // {   cout<<"C"<<endl;
-    //     if(v_num == obj_vec[v_num-1]->mv->post_order_number)
-    //     {   cout<<"u has post num: "<<u->post_order_number<<endl;
-    //         cout<<"mv==v for post number: "<<v_num<<" and pre number: "<<obj_vec[v_num-1]->mv->pre_order_number<<endl;
-    //         cout<<"t-1 here: "<<t-1<<endl;
-    //         LUVt[v_num][t-1] = Luvt(u,  obj_vec[v_num-1]->node, t-1);
-    //         cout<<"luv_t_minus_one: "<<LUVt[v_num][t-1]<<endl;
-    //     }
-    //     // else{
-    //     //     LUVt[v_num][t-1] = L_uvt_theo3(u,  obj_vec[v_num-1]->node, t-1);
-    //     // }
-    // }
-    
-
-    // if(Tut[u->post_order_number][t] == -1)
-    // Tut[u->post_order_number][t] = T_u_t(t, u);
-    
-    //     int i=2; 
-    //     cout<<"CU[1]: "<<Cu[1]<<" and intial t: "<<t<<endl;
-    //     t = t - Cu[1] - 1;
-    //     cout<<"t: "<<t<<endl;
-    //     while(t != 0){
-    //         sleep(1);
-    //         cout<<"loop of t: "<<t<<endl;
-    //         int beta = Nu[i-1];
-    //         Cu[i] = XUVt[beta][t];
-    //         Nu[i] = CUVt[beta][t];
-    //         t = t - Cu[i];
-    //         if(Nu[i] == 0)  break;
-    //         cout<<"Cu["<<i<<"]: "<<Cu[i]<<endl;
-    //         i++;
-    //     }
-    
-    //     initialize_TV1_TUV0_RUV1_LUV0();
-    //     init_XUVt_CUVt();
-    //     init_LUVt();
-        
-    //     cout<<"i: "<<i<<endl;
-    //     proxies.push_back(u->pre_order_number);
-    //     for(int j= 1; j< i; j++){
-    //         cout<<"Nu["<<j<<"]: "<<Nu[j]<<endl;
-    //         cout<<"Cu["<<j<<"]: "<<Cu[j]<<endl;
-    //         cout<<"B"<<endl;
-    //         Proxies(obj_vec[(Nu[j])-1]->node, Cu[j]);
-    //     }
-        return;
-
+      else
+    break;
+    }
+  return;
 }
 
 
@@ -1044,43 +907,6 @@ void display_obj_list(){
         line = obj_vec[i]->To_string();
         cout<<"for i= "<<i<<" "<<line<<endl;
     }
-}
-
-void INITIALIZATION(int u_post_order_num){
-    int mu_num = obj_vec[u_post_order_num - 1]->mv->post_order_number;
-    for(int i = mu_num; i <= u_post_order_num; i++){
-        TV1[i] = Tv1(obj_vec[i-1]->node);
-        TUV0[i] = T_uv_Zero(obj_vec[u_post_order_num - 1]->node, obj_vec[i - 1]->node);
-        RUV1[i] = Ruv1(obj_vec[u_post_order_num - 1]->node, obj_vec[i - 1]->node);
-        LUV0[i] = Luv0(obj_vec[u_post_order_num - 1]->node, obj_vec[i - 1]->node);
-    }
-    for(int i = mu_num; i <= u_post_order_num; i++)
-    {
-        // cout<<"T"<<i<<"1= "<<TV1[i]<<endl; 
-        Tut[i][1]=TV1[i];
-    }
-}
-
-void L4ForPhaseOne(int u_post_order_num, int k){
-    int mu_num = obj_vec[u_post_order_num -1]->mv->post_order_number;
-    for(int t=2; t<=k; t++){
-        for(int v_num = mu_num + 1; v_num < u_post_order_num; v_num++){
-            if(v_num == obj_vec[v_num-1]->mv->post_order_number){
-                
-                LUVt[v_num][t-1] = Luvt(t-1, obj_vec[v_num-1]->node, obj_vec[u_post_order_num -1]->node);
-                // cout<<"Luv called for u= "<<u_post_order_num<<" v= "<<v_num<<" t= "<<t-1<<" with Luvt= "<<LUVt[v_num][t-1]<<endl;
-            }
-        }
-
-        //L7..
-        // if(u_post_order_num==10)
-        // cout<<"finding Tut for node_post_order number= "<<u_post_order_num<<" and t= "<<t<<endl;
-        Tut[u_post_order_num][t] = T_u_t(t, obj_vec[u_post_order_num-1]->node);
-        // cout<<"for node u= "<<u_post_order_num<<" and t="<<t<<": Tut= "<<Tut[u_post_order_num][t]<<" Nu= "<<Nu[u_post_order_num]<<" Cu= "<<Cu[u_post_order_num]<<endl;
-        // cout<<endl;
-    }
-    // cout<<"L4 ends"<<endl;
-    // cout<<endl<<endl;
 }
 
 void check_tree()
@@ -1182,282 +1008,195 @@ void check_Tuvv0()
         }
     }
 }
+/*
+  ========================================
+  QUICK SORT
+  ========================================
+*/
 
-int main(int argc, char* argv[])                                // argc???????????????????????????????????
-
+//Functions to sort a vector of Integers.
+int 
+partition(vector<int> &values, int left, int right) 
 {
-    initCu_And_Nu();                                            //what is this for?????????????????????
-    init_TUt();                                                 //what is this for?????????????????????
-    init_XUVt_CUVt();                                           //what is this for?????????????????????
-    initialize_TV1_TUV0_RUV1_LUV0();                            //what is this for?????????????????????
-    init_LUVt();                                                //what is this for?????????????????????
-
-        int k =0;
-        cout<<"Enter k: "<<endl;
-        cin>>k;
-        ifstream infile;        //taking input of all parent-child nodes    
-        string filename = argv[1];                               //where is this argv[] coming from????????????????
-        infile.open(filename.c_str());                          //use of .c_str()???????????????????????????
-        string line;
-            
-        //for first line..
-        getline(infile, line);
-        istringstream check(line);  
-        int parent;
-        check >> parent;
-        Node* parent_node = new Node(0, nullptr, parent);           //Root of the biggest tree created with pre order no.=0
-        nodes_list[parent] = parent_node;
-        nodes_count++;
-        string arrow;
-        check >> arrow;
-
-        int child;
-        while(check >> child){
-            Node* child_node = new Node(0, parent_node, child);
-            Edge* edge_obj = new Edge(1, child_node, parent_node);
-            edge_vec.push_back(edge_obj);
-            nodes_list[child] = child_node;
-            nodes_count++;
-            parent_node->node_child.push_back(child_node);
+    int pivotIndex = left + (right - left) / 2;
+    int pivotValue = values[pivotIndex];
+    int i = left, j = right;
+    int temp;
+    while(i <= j) {
+        while(values[i] < pivotValue) {
+            i++;
         }
-
-        //second line onwards
-        while(getline(infile, line))    
-        {   
-            istringstream check1(line); 
-            check1 >> parent;   
-            check1>>arrow;
-            Node* par_node = nodes_list[parent];     //assuming node is already present in the tree           
-            while(check1>>child)    
-            {   
-                Node* child_node = new Node(0, par_node, child);
-                par_node->node_child.push_back(child_node);
-                Edge* edge_obj = new Edge(1, child_node, par_node);
-                edge_vec.push_back(edge_obj);
-                nodes_list[child] = child_node;
-            }   
-        }   
-                
-        infile.close();
-
-        ifstream infile2;       //taking input of the weight of the nodes   
-        filename = argv[2];
-        infile2.open(filename.c_str()); 
-        while(getline(infile2, line))   
-        {   
-            istringstream check1(line); 
-            int n;              //index of node in allnodes 
-            int weight;         //weight of nth node in allnodes    
-            string arrow;   
-            check1>>n;  
-            check1>>arrow;  
-            check1>>weight; 
-            (nodes_list[n]->weight) = weight;   
-        }   
-        infile2.close();
-        // check_tree();
-
-        /*_____________________________PHASE 1________________________________*/
-        // display_tree(nodes_list[0]);
-        // display_edges(edge_vec);
-        init_mv_list();
-
-        // check_mv();
-
-// cout<<"asdf"<<endl;
-        int node_num = 0;
-        L1(nodes_list[0], node_num);
-        init_mv_prime_list();
-        
-// cout<<"asdf"<<endl;
-        store_mv_prime_in_Object();
-        // display_MV_and_MV_prime();
-        cout<<"obj_vec.size()= "<<obj_vec.size()<<endl;
-// cout<<"asdf"<<endl;
-// cout<<"asdf"<<endl;
-        // display_obj_list();
-//         if(k>=obj_vec.size()){
-
-//          for(int i=0;i<obj_vec.size();i++)
-//          {
-//              if(i!=obj_vec.size()-1)
-//              cout<<nodes_list[i]->pre_order_number<<" ";
-//              else 
-//                  cout<<nodes_list[i]->pre_order_number<<endl;
-//          }
-//          cout<<"Total cost: "<<0<<endl;
-//          return 0;
-//      }
-
-// cout<<"asdf"<<endl;
-        int n = obj_vec.size();
-        for(int u_num = 1; u_num <=n; u_num++){
-            INITIALIZATION(u_num);
-            
-            L4ForPhaseOne(u_num, k);
-            initialize_TV1_TUV0_RUV1_LUV0();
-            init_LUVt();
+        while(values[j] > pivotValue) {
+            j--;
         }
+        if(i <= j) {
+            temp = values[i];
+            values[i] = values[j];
+            values[j] = temp;
+            i++;
+            j--;
+        }
+    }
+    return i;
+}
 
-        
-//             // check_Tv1();
-//         // check_Luvv0();
-//          // check_Tuvv0();
-        
+void 
+quicksort(vector<int> &values, int left, int right) 
+{
+    if(left < right) {
+        int pivotIndex = partition(values, left, right);
+        quicksort(values, left, pivotIndex - 1);
+        quicksort(values, pivotIndex, right);
+    }
+}
 
-//         // for(int i=1; i<= n; i++){
-//         //     for(int j=1; j<=k; j++){
-//         //         cout<<"||T u||t for u="<<i<<" and t= "<<j<<": "<<Tut[i][j]<<endl;
-//         //     }
-//         // }
+/*
+  ========================================
+  Main function/ Driver
+  ========================================
+*/
 
-//         // for(int i =0;i<obj_vec.size();i++)
-//         // {
-//         //   // if(Cu[i]!=0)
-//         //   // cout<<obj_vec[i]->post_orde<<"]= "<<Cu[i]<<endl;
-//         //   cout<<(obj_vec[i])->post_order_number<<endl;
-//         // }
-//         // for(int i =0;i<obj_vec.size();i++)
-//         // {
-//         //   if(Nu[i]!=0)
-//         //   cout<<"Nu["<<i<<"]= "<<Nu[i]<<endl;
-//         // }
+int
+main (int argc, char *argv[])   //--^ Question: What is the use of argc?
+                                    //--^ Answer: The argc is actually the number of arguments passed when we run
+                                      //            the executable file.
+{
 
-        
-//         /*PHASE 2*/
-//         //init();
-//         //display_Cu();
-//         //display_Nu();.
+  int k = 0;
+  cout << "Enter k: " << endl;
+  cin >> k;
+  ifstream infile;                  //taking input of all parent-child nodes    
+  string filename = argv[1];
+  infile.open (filename.c_str ());  //to read the file, we use c_str() as a part of syntax.
+  string line;
 
-//         // cout<<"here comes phase2\n";
+  //for first line..
+  getline (infile, line);
+  istringstream check (line);
+  int parent;
+  check >> parent;
+  Node *parent_node = new Node (0, nullptr, parent);    //Root of the biggest tree created with pre order no.= 0
+  nodes_list[parent] = parent_node;
+  nodes_count++;
+  string arrow;
+  check >> arrow;
 
-//             //display();
-//     // for(int i1 = obj_vec[n-1]->mv->post_order_number; i1 < obj_vec[n-1]->node->post_order_number; i1++){
-//     //     for(int j1=1; j1 <= k; j1++){
-//     //         if(LUVt[i1][j1] == -1)
-//     //         int c = B_uvt(obj_vec[n-1]->node, obj_vec[i1-1]->node, j1);
-//     //     }
-//     // }
-//         // cout<<"yaha pe\n";
-//         // B_uvt(obj_vec[n-1]->node, obj_vec[7]->node, 1);
-//         //     // for(int i= 1; i<=obj_vec.size(); i++){
-//         //         // for(int t=1; t<=k; t++){
-//         //             Proxies(obj_vec[n-1]->node, k);
-//         //         // }
-//         //     // }
-//         proxyList.push_back(obj_vec.size());
-//         proxyL.insert(obj_vec.size());
-//         Proxies(obj_vec[obj_vec.size()-1]->node, k);
-        
-//         for(int i=0;i<NuList.size();i++)
-//         {
+  int child;
+  while (check >> child)
+    {
+      Node *child_node = new Node (0, parent_node, child);
+      Edge *edge_obj = new Edge (1, child_node, parent_node);
+      edge_vec.push_back (edge_obj);
+      nodes_list[child] = child_node;
+      nodes_count++;
+      parent_node->node_child.push_back (child_node);
+    }
 
-//          Proxies(obj_vec[NuList[i]-1]->node, CuList[i]);
+  //second line onwards
+  while (getline (infile, line))
+    {
+      istringstream check1 (line);
+      check1 >> parent;
+      check1 >> arrow;
+      Node *par_node = nodes_list[parent];  //assuming node is already present in the tree           
+      while (check1 >> child)
+    {
+      Node *child_node = new Node (0, par_node, child);
+      par_node->node_child.push_back (child_node);
+      Edge *edge_obj = new Edge (1, child_node, par_node);
+      edge_vec.push_back (edge_obj);
+      nodes_list[child] = child_node;
+    }
+    }
 
-//         }
-//         // for(int i=0; i<proxies.size(); i++){
-//         //     cout<<"Proxy: "<<proxies[i]<<endl;
-//         // }
-//         // cout<<endl<<"NuList and CuList: "<<endl;
-//         // int sie=NuList.size();
+  infile.close ();
 
-//         // cout<<NuList.size()<<" is size of NuList"<<endl;
-
-//  // for(int i1=0;i1<NuList.size();i1++)
-//  //    {
-//  //      cout<<"NuList["<<i1<<"]= "<<NuList[i1]<<endl;
-//  //    }
-//  //        cout<<"proxyList size= "<<proxyList.size()<<endl;
-//     //     for(int i1=0;i1<proxyList.size();i1++)
-//     // {
-//     //   cout<<"proxyList["<<i1<<"]= "<<proxyList[i1]<<endl;
-//     // }
-
-//     // cout<<"size of set= "<<proxyL.size()<<endl;
-
-//     int size1=proxyL.size();
-//     vector<int> beforeFinalProxies;
-//     for(int i=0;i<size1;i++)
-//     {
-//      int x=*proxyL.begin();
-//      beforeFinalProxies.push_back(x);
-        
-//      proxyL.erase(x);
-
-//     }
-
-//     // for(int i=0;i<beforeFinalProxies.size();i++)
-//     // {
-//     //   cout<<"beforeFinalProxies["<<i<<"]= "<<beforeFinalProxies[i]<<endl;
-//     // }
-
-//     set<int> s;
-//     for(int i=0;i<beforeFinalProxies.size();i++)
-//     {
-//      s.insert((obj_vec[beforeFinalProxies[i]-1])->node->pre_order_number);
-//     }
-
+  ifstream infile2;     //taking input of the weight of the nodes   
+  filename = argv[2];
+  infile2.open (filename.c_str ());
+  while (getline (infile2, line))
+    {
+      istringstream check1 (line);
+      int n;            //index of node in allnodes 
+      int weight;       //weight of nth node in allnodes    
+      string arrow;
+      check1 >> n;
+      check1 >> arrow;
+      check1 >> weight;
+      (nodes_list[n]->weight) = weight;
+    }
+  infile2.close ();
 
 
-//  int size2=s.size();
-//     vector<int> finalProxies;
-//     for(int i=0;i<size2;i++)
-//     {
-//      int x=*s.begin();
-//      finalProxies.push_back(x);
-        
-//      s.erase(x);
+/*
+  ========================================
+  PHASE 1
+  ========================================
+*/
 
-//     }
-//     cout<<"Proxies: "<<endl;
-//     for(int i=0;i<finalProxies.size();i++)
-//     {
-//      if(i!=finalProxies.size()-1)
-//          cout<<finalProxies[i]<<" ";
-//      else 
-//          cout<<finalProxies[i]<<endl;
-//     }
+  init_mv_list ();
 
-//     cout<<"Total cost: "<<Tut[obj_vec.size()][k]<<endl;
-//     // cout<<"afadf"<<endl;
-//         // int i1=0;
-//         // while(NuList.size()>0)
-//         // {
-//         //   int n=NuList.front();
-            
+  int node_num = 0;
+  L1 (nodes_list[0], node_num);
+  init_mv_prime_list ();
 
-//         //   NuList.pop();
-//         //   int t3=CuList[i1];
-//         //   i1++;
-//         //   cout<<"n= "<<n<<" popped from NuList T3="<<t3<<" n= "<<n<<" obj_vec.size()= "<<obj_vec.size()<<endl;
-//         //   cout<<"k= "<<k<<endl;
-//         //   if(n==obj_vec.size())
-//         //   {
+  store_mv_prime_in_Object ();
 
-//         //       cout<<"root popped"<<endl;
-//         //       break;
-//         //   }
-            
-//         //   if(k-1==t3)
-//         //   {
-//         //       cout<<"t3=1 left"<<endl;
-//         //       proxyList.push_back(n);
-//         //       break;
-//         //   }
-//         //   else{
-                
-//         //       cout<<"proxies called for "<<obj_vec[n-1]->node->post_order_number<<endl;
-//         //   proxyList.push_back(n);
-//         //   Proxies(obj_vec[n-1]->node, t3);
+  if (k >= obj_vec.size ())
+    {
 
-//         //   cout<<"NuList size = "<<NuList.size()<<" with front = "<<NuList.front()<<endl;
+      for (int i = 0; i < obj_vec.size (); i++)
+    {
+      if (i != obj_vec.size () - 1)
+        cout << nodes_list[i]->pre_order_number << " ";
+      else
+        cout << nodes_list[i]->pre_order_number << endl;
+    }
+      cout << "Total cost: " << 0 << endl;
+      return 0;
+    }
 
-//         //   break;
-//         //   }
-//         // }
-         
+  int n = obj_vec.size ();
+  for (int u_num = 1; u_num <= n; u_num++)
+    {
+      INITIALIZATION (u_num);
+      L4ForPhaseOne (u_num, k);
+    }
+
+/*
+  ========================================
+  PHASE 2
+  ========================================
+*/
+
+  proxyList.push_back (obj_vec.size ());
+  Proxies (obj_vec[obj_vec.size () - 1]->node, k);
+
+  for (int i = 0; i < NuList.size (); i++)
+    {
+      Proxies (obj_vec[NuList[i] - 1]->node, CuList[i]);
+    }
+
+  //creating a new vector which contains the pre-order number of the proxies.
+  vector<int> finalProxies;
+  for(int i=0; i<proxyList.size(); i++){
+      finalProxies.push_back(obj_vec[proxyList[i]-1]->node->pre_order_number);
+  }
+
+  //Now sorting the vector.
+  int rightEnd = finalProxies.size() -1;
+  quicksort(finalProxies, 0, rightEnd);
 
 
-        return 0;
-        
+  cout << "Proxies: " << endl;
+  for (int i = 0; i < rightEnd+1; i++)
+    {
+      if (i != rightEnd)
+    cout << finalProxies[i] << " ";
+      else
+    cout << finalProxies[i] << endl;
+    }
+
+  cout << "Total cost: " << Tut[obj_vec.size ()][k] << endl;
+  return 0;
 }
